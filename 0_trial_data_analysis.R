@@ -23,12 +23,12 @@ par(mfrow=c(2,2))
 par(mar=c(5,5,2,2))
 prev_base = as.numeric(tapply(data$Prevalence_baseline_2_10_yrs,data$net_type_brand,mean))
 boxplot(data$Prevalence_baseline_2_10_yrs~data$net_type_brand,ylim=c(0,1),yaxt="n",
-        ylab="Prevalence in children 2 to 10-years (%)",
+        ylab="",
         xaxt="n",xlab="",bty=NA,frame=FALSE,
         col = adegenet::transp(c("red","blue","orange","darkgreen"),0.7))
 axis(2,las=2,at=seq(0,1,0.2),labels=seq(0,100,20))
 axis(1,at=1:4,labels=c("Olyset Net","PermaNet 2.0","Olyset Plus","PermaNet 3.0"))
-
+mtext(line = 3,side=2,text="Prevalence in children 2 to 10-years (%)")
 pt_col = c("darkred","darkblue","darkorange","darkgreen")
 rng = seq(0.7,4.3,length=4)
 for(i in 1:4){
@@ -149,7 +149,7 @@ boxplot(data$efficacy_6m[data$net_type_brand == 1 | data$net_type_brand == 2],
         xaxt="n",xlab="Month since deployment of net",bty=NA,frame=FALSE,
         col = rep(adegenet::transp(c("lightblue","green"),0.7),each=4))
 axis(2,las=2,at=seq(-0.6,1,0.2),labels=seq(-60,100,20))
-axis(1,at=1:16,labels=rep(c(6,12,18,25),4))
+axis(1,at=1:8,labels=rep(c(6,12,18,25),2))
 mtext(side = 2,line = 4,text = "Relative reduction in prevalence since")
 mtext(side = 2,line = 3,text = "baseline at each cross-sectional survey (%)")
 
@@ -184,83 +184,107 @@ abline(v=4.5,lty=2)
 text(2.5,-0.7,"Pyrethroid-only ITNs")
 text(6.5,-0.7,"Pyrethroid-PBO ITNs")
 
+# (D) The prevalence map
 
-hist(data$sleeping_under_net_6m,
-     ylab="Frequency",main="",
-     xlab="Proportion of people using nets",
-     border = "darkblue",lty=1,
-     col = adegenet::transp("darkblue",0.4),bty="n",
-     breaks = 15,xlim=c(0,1),
-     yaxt="n",xaxt="n")
-axis(1,at=seq(0,1,0.2),labels=seq(0,100,20))
-axis(2,las=2,at=c(0,5,10,15))
+####################################
+##
+## Uganda map
 
-hist(data$sleeping_under_net_12m,
-     ylab="",main="",
-     xlab="",
-     border = "blue",lty=2,
-     col = adegenet::transp("blue",0.4),bty="n",
-     breaks = 20,xlim=c(0,1),add=T,
-     yaxt="n",xaxt="n")
+library(rgdal)
+library(classInt)
+library(dplyr)
+library(rgeos)
+library(rmapshaper)
 
-hist(data$sleeping_under_net_18m,
-     ylab="",main="",
-     xlab="",
-     border = "lightblue",lty=3,
-     col = adegenet::transp("lightblue",0.4),bty="n",
-     breaks = 25,xlim=c(0,1),add=T,
-     yaxt="n",xaxt="n")
+world = readOGR(dsn="H:/GADM/version3.6/GADM36_1", layer = "gadm36_1_new", stringsAsFactors = FALSE)
+afr_ad = world[which(world$CONTINENT == "Africa"),]
 
-# hist(data$sleeping_under_net_25m,
-#      ylab="",main="",
-#      xlab="",
-#      border = adegenet::transp("grey",0.1),lty=3,
-#      col = adegenet::transp("lightblue",0.4),bty="n",
-#      breaks = 25,xlim=c(0,1),add=T,
-#      yaxt="n",xaxt="n")
+w0 = readOGR(dsn="H:/GADM/version3.6/GADM36_0", layer = "gadm36_0", stringsAsFactors = FALSE)
+afr0_ad = w0[w0$NAME_0 %in% afr_ad$NAME_0, ]
 
-legend("topleft",legend=c("After 6 months",
-                          "After 12 months",
-                          "After 18 months"),
-       col=adegenet::transp(c("darkblue","blue","lightblue"),0.4),
-       pch=15,lty=c(1,2,3),bty = "n")
+rm(list = c("w0", "world"))
+
+afr0 <- gSimplify(afr0_ad, tol=0.01, topologyPreserve=TRUE)
+
+afr = SpatialPolygonsDataFrame(afr_ad, data = afr_ad@data)
+afr0 = SpatialPolygonsDataFrame(afr0, data = afr0_ad@data)
+
+afr@data <- plyr::join(afr@data, data, by="DIDE_CODE")
+names(afr@data)
+
+delc = c("Uganda")
+
+afr = afr[which(afr$NAME_0 %in% delc),]
 
 
-## net_timing
-
-data$net_colour = ifelse(data$Net_Type == "PermaNet 2.0", "darkblue",
-                               ifelse(data$Net_Type == "PermaNet 3.0","darkgreen",
-                                      ifelse(data$Net_Type == "Olyset Net", "darkred","orange")))
-
-tapply(data$net_colour,data$Distribution_Month,length)
-
-data$net_delivery_order =  ifelse(data$Distribution_Month == "Mar-17", 1,
-                                        ifelse(data$Distribution_Month == "May-17",2,
-                                               ifelse(data$Distribution_Month == "Jul-17", 3,4)))
+legend_names <- function(x, pretty=FALSE){
+  if(pretty) x = prettyNum(x,big.mark=",")
+  op = rep(NA, length(x)-1)
+  op = paste(x[1:(length(x)-1)],"-",x[2:length(x)])
+  return(op)
+}
 
 
-three_nets = subset(data,data$Net_Type != "PermaNet 2.0")
-two_nets = subset(data,data$Net_Type == "PermaNet 3.0" | data$Net_Type ==  "Olyset Plus")
-one_net = subset(data,data$Net_Type == "Olyset Plus")
+# png(file = paste0("Uganda_map.png"), width=260,height=260,units="mm",res=300)
 
-all = as.numeric(tapply(data$Net_Type,data$net_delivery_order,length))
-barplot(all,col="darkblue",yaxt="n",ylab="Number of clusters")
-axis(2,las=2,at=c(0,10,20,30,40))
-mtext("Month for net deployment",side=1,line=3)
-axis(1,at=c(0.75,1.9,3.1,4.25),labels=c("Mar-17","May-17","Jul-17","Mar-18"))
 
-three = as.numeric(tapply(three_nets$Net_Type,three_nets$net_delivery_order,length))
-barplot(three,col="darkred",yaxt="n",add=T)
-two = as.numeric(tapply(two_nets$Net_Type,two_nets$net_delivery_order,length))
-barplot(two,col="darkgreen",yaxt="n",add=T)
-one = as.numeric(tapply(one_net$Net_Type,one_net$net_delivery_order,length))
-barplot(one,col="orange",yaxt="n",add=T)
+p_break = c(-1,0,0.1,0.2,0.3,0.4,0.5,0.6,0.8)
+cols_temp = rev(RColorBrewer::brewer.pal(length(p_break), "YlGnBu"))
+cols = c(RColorBrewer::brewer.pal(length(p_break), "YlGnBu"))
+cols = c("white",cols_temp[1:9])
+# cols[length(cols)+1] = "black"
 
-legend("topleft",legend = c("PermaNet 2.0","Olyset net",
-                            "PermaNet 3.0","Olyset Plus"),
-       col=c("darkblue","darkred","darkgreen","orange"),
-       bty="n",pch=15)
+par(mfrow=c(1,1), mar=c(0,0,2,0), oma=c(0,0,3,0), xpd=FALSE)
 
+
+dat1 = afr@data[,14] ## CHECK COLUMN IS PREV AT BASELINE
+dat1[is.na(dat1)] <- -1
+class <- classIntervals(dat1, (length(p_break)-1), style="fixed",fixedBreaks=p_break)
+colcode <- findColours(class, cols)
+plot(afr, col=colcode, border="grey35")
+plot(afr0, border="white", lwd=3, add=TRUE)
+plot(afr0, lwd=1, add=TRUE)
+# mtext("Lives saved MDA all-ages", 3, line = -3, font=2, cex=1.2)
+
+par(xpd=NA)
+options(scipen = 999)
+legend("left", legend=c(legend_names(100*p_break[2:9], pretty=TRUE)), col=c(cols[2:9]), pch=15, pt.cex=2, cex=1.1,title="Baseline prevalence 2 to 10 yr olds (%)", bty="n")
+
+
+#####################################################
+##
+## Figure 2 is the exploration of how variable the baseline
+## metrics are to one another. 
+
+## (a) clusters (map from LLINEUP TEAM)
+## (b) densities (map from LLINEUP TEAM)
+## (c) resistance (map)
+## as above then
+
+p_break = c(0,0.75,0.77,0.79,0.81,0.83,0.85,0.88,0.90)
+cols_temp = rev(RColorBrewer::brewer.pal(length(p_break), "YlGnBu"))
+cols = c(RColorBrewer::brewer.pal(length(p_break), "YlGnBu"))
+cols = c("white",cols_temp[1:9])
+# cols[length(cols)+1] = "black"
+
+par(mfrow=c(1,1), mar=c(0,0,2,0), oma=c(0,0,3,0), xpd=FALSE)
+
+
+dat1 = afr@data[,13] ## CHECK COLUMN IS PYRETHROID RESISTANCE
+dat1[is.na(dat1)] <- 0
+class <- classIntervals(dat1, (length(p_break)-1), style="fixed",fixedBreaks=p_break)
+colcode <- findColours(class, cols)
+plot(afr, col=colcode, border="grey35")
+plot(afr0, border="white", lwd=3, add=TRUE)
+plot(afr0, lwd=1, add=TRUE)
+# mtext("Lives saved MDA all-ages", 3, line = -3, font=2, cex=1.2)
+
+par(xpd=NA)
+options(scipen = 999)
+legend("left", legend=c(legend_names(100*p_break, pretty=TRUE)), col=c(cols), pch=15, pt.cex=2, cex=1.1,title="Estimated pyrethroid resistance at baseline (%)", bty="n")
+
+
+## (d) baseline nets
 ## baseline
 
 hist(data$X3_and_over_net_use_baseline,
@@ -304,18 +328,43 @@ legend("topleft",legend = c("PermaNet 2.0","Olyset net",
 ## Can net type explain baseline net use?
 summary(aov(data$X3_and_over_net_use_baseline ~ data$Net_Type))
 
-NET_COUNT = as.numeric(tapply(data$Distribution_Month,data$Net_Type,length))
-NET_NAMES = unique(sort(data$Net_Type))
-pie(x=NET_COUNT, labels = NET_NAMES, radius = 1,
-    col = c("darkred","orange","darkblue","darkgreen"),cex=1.5,
-    main = "Proportion of clusters with each net", clockwise = T)
-text(-0.4,0.4,"n = 32",col="white",cex=1.5)
-text(0.3,0.7,"n = 13",col="white",cex=1.5)
-text(0.6,0.1,"n = 19",col="black",cex=1.5)
-text(-0.1,-0.5,"n = 40",col="white",cex=1.5)
+## (e) time of deployment
+## net_timing
+
+data$net_colour = ifelse(data$Net_Type == "PermaNet 2.0", "darkblue",
+                         ifelse(data$Net_Type == "PermaNet 3.0","darkgreen",
+                                ifelse(data$Net_Type == "Olyset Net", "darkred","orange")))
+
+tapply(data$net_colour,data$Distribution_Month,length)
+
+data$net_delivery_order =  ifelse(data$Distribution_Month == "Mar-17", 1,
+                                  ifelse(data$Distribution_Month == "May-17",2,
+                                         ifelse(data$Distribution_Month == "Jul-17", 3,4)))
 
 
+three_nets = subset(data,data$Net_Type != "PermaNet 2.0")
+two_nets = subset(data,data$Net_Type == "PermaNet 3.0" | data$Net_Type ==  "Olyset Plus")
+one_net = subset(data,data$Net_Type == "Olyset Plus")
 
+all = as.numeric(tapply(data$Net_Type,data$net_delivery_order,length))
+barplot(all,col="darkblue",yaxt="n",ylab="Number of clusters")
+axis(2,las=2,at=c(0,10,20,30,40))
+mtext("Month for net deployment",side=1,line=3)
+axis(1,at=c(0.75,1.9,3.1,4.25),labels=c("Mar-17","May-17","Jul-17","Mar-18"))
+
+three = as.numeric(tapply(three_nets$Net_Type,three_nets$net_delivery_order,length))
+barplot(three,col="darkred",yaxt="n",add=T)
+two = as.numeric(tapply(two_nets$Net_Type,two_nets$net_delivery_order,length))
+barplot(two,col="darkgreen",yaxt="n",add=T)
+one = as.numeric(tapply(one_net$Net_Type,one_net$net_delivery_order,length))
+barplot(one,col="orange",yaxt="n",add=T)
+
+legend("topleft",legend = c("PermaNet 2.0","Olyset net",
+                            "PermaNet 3.0","Olyset Plus"),
+       col=c("darkblue","darkred","darkgreen","orange"),
+       bty="n",pch=15)
+
+## (f) net use
 ###################################################
 ##
 ## 1 Site parameter set up
@@ -707,3 +756,64 @@ abline(v=median(D),col="blue",lwd=2)
 axis(2,las=2,at=c(0:7))
 abline(v=quantile(D,0.9),col="blue",lwd=2,lty=2)
 abline(v=quantile(D,0.1),col="blue",lwd=2,lty=2)
+
+
+###########################
+##
+##
+## Alternatives
+
+hist(data$sleeping_under_net_6m,
+     ylab="Frequency",main="",
+     xlab="Proportion of people using nets",
+     border = "darkblue",lty=1,
+     col = adegenet::transp("darkblue",0.4),bty="n",
+     breaks = 15,xlim=c(0,1),
+     yaxt="n",xaxt="n")
+axis(1,at=seq(0,1,0.2),labels=seq(0,100,20))
+axis(2,las=2,at=c(0,5,10,15))
+
+hist(data$sleeping_under_net_12m,
+     ylab="",main="",
+     xlab="",
+     border = "blue",lty=2,
+     col = adegenet::transp("blue",0.4),bty="n",
+     breaks = 20,xlim=c(0,1),add=T,
+     yaxt="n",xaxt="n")
+
+hist(data$sleeping_under_net_18m,
+     ylab="",main="",
+     xlab="",
+     border = "lightblue",lty=3,
+     col = adegenet::transp("lightblue",0.4),bty="n",
+     breaks = 25,xlim=c(0,1),add=T,
+     yaxt="n",xaxt="n")
+
+# hist(data$sleeping_under_net_25m,
+#      ylab="",main="",
+#      xlab="",
+#      border = adegenet::transp("grey",0.1),lty=3,
+#      col = adegenet::transp("lightblue",0.4),bty="n",
+#      breaks = 25,xlim=c(0,1),add=T,
+#      yaxt="n",xaxt="n")
+
+legend("topleft",legend=c("After 6 months",
+                          "After 12 months",
+                          "After 18 months"),
+       col=adegenet::transp(c("darkblue","blue","lightblue"),0.4),
+       pch=15,lty=c(1,2,3),bty = "n")
+
+
+
+
+NET_COUNT = as.numeric(tapply(data$Distribution_Month,data$Net_Type,length))
+NET_NAMES = unique(sort(data$Net_Type))
+pie(x=NET_COUNT, labels = NET_NAMES, radius = 1,
+    col = c("darkred","orange","darkblue","darkgreen"),cex=1.5,
+    main = "Proportion of clusters with each net", clockwise = T)
+text(-0.4,0.4,"n = 32",col="white",cex=1.5)
+text(0.3,0.7,"n = 13",col="white",cex=1.5)
+text(0.6,0.1,"n = 19",col="black",cex=1.5)
+text(-0.1,-0.5,"n = 40",col="white",cex=1.5)
+
+
