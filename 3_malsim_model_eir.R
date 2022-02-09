@@ -37,7 +37,7 @@ ellie_cluster_run_malsim <- function(run){
 ## Adjusting this to include a 2023 distribution running to 2026
 ## so we can compare to the 2 year net distribution campaign
 
-malsim_actual_f = function(test_data,dat_row){
+malsim_eir_f = function(test_data,dat_row,eir){
   year <- 365
   month <- 30
   sim_length <- 15 * year ## initially just til 2020 as need extra resistance data!
@@ -51,7 +51,7 @@ malsim_actual_f = function(test_data,dat_row){
   human_population <- 10000
   
   ## This is calibrated to reflect the mosquito densities: raw data
-  starting_EIR <- 65
+  starting_EIR <- eir
   
   
   simparams <- get_parameters(
@@ -108,9 +108,9 @@ malsim_actual_f = function(test_data,dat_row){
   bednet_events = data.frame(
     timestep = c(0, 3, 6, 9) * year + c(0,
                                         ## raw data: net timing
-                                            test_data$days_after_jan_2017[dat_row],
-                                            test_data$days_after_jan_2017[dat_row],
-                                            test_data$days_after_jan_2017[dat_row]),
+                                        test_data$days_after_jan_2017[dat_row],
+                                        test_data$days_after_jan_2017[dat_row],
+                                        test_data$days_after_jan_2017[dat_row]),
     name=c("background",
            "background",
            "trial_nets",
@@ -150,10 +150,70 @@ malsim_actual_f = function(test_data,dat_row){
   ## Run the simulations
   output1 <- run_simulation(sim_length, bednetparams_1,correlationsb1)
   
-  return(data.frame(timestep = output1$timestep,
-                    prev_pyr = output1$pv_730_3650
-                    
-  ))
+  dd = data.frame(timestep = output1$timestep,
+                  prev_pyr = output1$pv_730_3650)
+  
+  ## estimated EIR prevalence
+  eir_estimate = place1$prev_pyr[c(6*365+test_data$days_after_jan_2017[dat_row]-30)]
+  
+  ## measured prevalence
+  eir_to_match = test_data$Prevalence_baseline_2_10_yrs[dat_row]
+  
+  return(c((eir_to_match-eir_estimate)^2,
+           eir_estimate,eir))
 }
 
-place1 = malsim_actual_f(test_data,1)
+xx = seq(0,1,length=20)
+alpha = -3.4
+beta = 7
+yy = 1 / (1 + exp(-alpha - 
+                    beta*xx))
+plot(yy ~ xx)
+xx
+yy_est = 1 / (1 + exp(-alpha - 
+                        beta*test_data$Prevalence_baseline_2_10_yrs))
+
+comparison = array(dim=c(104,3))
+comparison_accept = numeric(104)
+
+for(i in 1:104){
+  comparison[i,] = malsim_eir_f(test_data=test_data,
+               dat_row = i,eir=yy_est[i])
+}
+for(i in 1:104){
+  comparison_accept[i] = ifelse(comparison[i,1] < 0.002,comparison[i,3],"no")  
+}
+
+             
+
+test_data$EIR = c(60,)
+
+dat_row = 2
+year=365
+
+place1 = malsim_actual_f(test_data,dat_row,eir=15)
+plot(place1$prev_pyr ~ place1$timestep,xlim=c(5.5*365,8.5*365),ylim=c(0,1),type="l")
+points(test_data$Prevalence_baseline_2_10_yrs[dat_row]~c(6*365+test_data$days_after_jan_2017[dat_row]-30),
+       col="orange",pch=19)
+
+
+
+
+timestep = c(0, 3, 6, 9) * year + c(0,
+                                    ## raw data: net timing
+                                    test_data$days_after_jan_2017[dat_row],
+                                    test_data$days_after_jan_2017[dat_row],
+                                    test_data$days_after_jan_2017[dat_row])
+abline(v=timestep,lty=2)
+points(test_data$Prevalence_6m[dat_row]~
+         c(6*365+test_data$days_after_jan_2017[dat_row]+365/2),
+       col="red",pch=19)
+points(test_data$Prevalence_12m[dat_row]~
+         c(6*365+test_data$days_after_jan_2017[dat_row]+365),
+       col="red",pch=19)
+points(test_data$Prevalence_18m[dat_row]~
+         c(6*365+test_data$days_after_jan_2017[dat_row]+365+365/2),
+       col="red",pch=19)
+points(test_data$Prevalence_25m[dat_row]~
+         c(6*365+test_data$days_after_jan_2017[dat_row]+365*2+30),
+       col="red",pch=19)

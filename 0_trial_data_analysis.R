@@ -379,7 +379,7 @@ library(adegenet)
 
 ## Looping through the 104 clusters 
 PARMS_USAGE = expand.grid(1:1000)
-
+PARMS_USAGE2 = array(dim=c(2,104))
 ## Specify the times when data were observed
 time_obs = c(0,6/12,12/12,18/12)
 
@@ -390,6 +390,7 @@ time_obs = c(0,6/12,12/12,18/12)
 ## where more specific data for different clusters are available this can be improved.
 
 net_dataAll = data
+
 
 for(i in 1:104){
   
@@ -438,7 +439,9 @@ for(i in 1:104){
   y_pred = beta0 + beta1 * New_x; //the y values predicted by the model
   }
   "
-  stanDso <- stan_model(model_code = stanmodelcode) 
+  
+  # Just need to run the below 1 time
+  # stanDso <- stan_model(model_code = stanmodelcode) 
   
   ## Put data into a list
   dat_standard <- list(N = length(time_obs), 
@@ -455,8 +458,8 @@ for(i in 1:104){
   
   
   ## plotting the posterior distribution for the parameters
-  post_beta<-As.mcmc.list(fit,pars="beta0")
-  plot(post_beta)
+  # post_beta<-As.mcmc.list(fit,pars="beta0")
+  # plot(post_beta)
   
   ## gradient is fit to the data for alpha
   ## standard_net_usage ~ exp(-alpha*time_obs)
@@ -478,10 +481,26 @@ for(i in 1:104){
   parms_usage$itn_leave_dur_standardLLIN_bt = -1/parms_usage$itn_leave_dur_standardLLIN
   
   PARMS_USAGE[,i] = sample(parms_usage$itn_leave_dur_standardLLIN_bt,1000,replace=FALSE)
-  
+  PARMS_USAGE2[1,i] = mean(b0)
+  PARMS_USAGE2[2,i] = mean(b1)
 }
 
+data$itn_leave_dur = as.numeric(colMeans(PARMS_USAGE))
+data$itn_leave_dur = ifelse(data$itn_leave_dur > 15,15,data$itn_leave_dur)
 
+data$itn_leave_durMean = -1/PARMS_USAGE2[2,]
+data$itn_leave_durMean = ifelse(data$itn_leave_durMean > 15,15,data$itn_leave_durMean)
+data$itn_leave_durMean = ifelse(data$itn_leave_durMean < 0,15,data$itn_leave_durMean)
+
+data$b0 = PARMS_USAGE2[1,]
+data$b1 = PARMS_USAGE2[2,]
+
+write.csv(data, "raw data/dd_params_attrition.csv")
+
+i = 2
+y_predicted_stn_exp = exp(PARMS_USAGE2[1,i]) * exp(PARMS_USAGE2[2,i]*time_m)
+plot(y_predicted_stn_exp ~ time_m,ylim=c(0,1))
+points(c(0.95,as.numeric(net_dataAll[i,c(12,14,16)])) ~ time_obs,pch=19,col="orange")
 
 standard_net_usage = c(0.95,as.numeric(data[i,c(12,14,16)]))
 
