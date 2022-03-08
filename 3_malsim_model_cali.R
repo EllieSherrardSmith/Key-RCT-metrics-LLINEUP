@@ -6,25 +6,33 @@
 ## trial data and see how closely we can recreate the
 ## cross-sectional survey results
 
-## Data
-## Uncertainty will be from the net parameters and stochastic model
-## I created 50 csv's with uncertainty for the net parameters
+## Functions from packages
+# remotes::install_github("mrc-ide/cali") 
+## just needed this once to load in cali
 
-## initial set:
-test_data = read.csv("raw data/data_with_calibrated_eir.csv",header=TRUE)
-
-## Function
+# remotes::install_github("mrc-ide/malariasimulation")
 
 library(malariasimulation)
+library(cali)
+
+# library(ggplot2)
+
+
+## Data
+
+test_data = read.csv("raw data/data.csv",header=TRUE)
 
 
 ##########################################
 ##
-## Function to run all sims
-# library(malariasimulation@feat/alt_resistance)
+## Function to run all sims first for calibrations to baseline prevalence
+## assuming this is 1 month prior to the trial initiation
 
+## Adjusting this to include a 2023 distribution running to 2026
+## so we can compare to the 2 year net distribution campaign
+## create the parameters list for the malaria model simulation: 
 
-malsim_actual_f = function(test_data,dat_row,eir){
+cali_clusters_f = function(dat_row){
   year <- 365
   month <- 30
   sim_length <- 15 * year ## initially just til 2020 as need extra resistance data!
@@ -38,7 +46,8 @@ malsim_actual_f = function(test_data,dat_row,eir){
   human_population <- 10000
   
   ## This is calibrated to reflect the mosquito densities: raw data
-  starting_EIR <- eir
+  starting_EIR <- 1
+  # dat_row = 1
   
   
   simparams <- get_parameters(
@@ -134,66 +143,62 @@ malsim_actual_f = function(test_data,dat_row,eir){
   correlationsb1 <- get_correlation_parameters(bednetparams_1)
   correlationsb1$inter_round_rho('bednets', 1)
   
+  # Define target, here two prevalence measures:
+  target <- c(test_data$Prevalence_baseline_2_10_yrs[dat_row])
+  # Time points at which to match target
+  target_tt <- c(6*365+test_data$days_after_jan_2017[dat_row]-30)
+  
   ## Run the simulations
   output1 <- run_simulation(sim_length, bednetparams_1,correlationsb1)
-}
-
-dat_row = 1
-year=365
-
-
-pred_vs_empir = array(dim=c(4,2,nrow(test_data)))
-for(i in 1:nrow(test_data)){
   
-  place1 = malsim_actual_f(test_data,i,eir=test_data$eir_est[i])
-  place1$pv_730_3650 = place1$n_detect_730_3650/place1$n_730_3650
-
-  pred_vs_empir[,1,i] = c(test_data$Prevalence_6m[i],
-                               test_data$Prevalence_12m[i],
-                               test_data$Prevalence_18m[i],
-                               test_data$Prevalence_25m[i])
-  pred_vs_empir[,2,i] = c(place1$pv_730_3650[c(6*365+test_data$days_after_jan_2017[i]+365/2)],
-                                place1$pv_730_3650[c(6*365+test_data$days_after_jan_2017[i]+365)],
-                                place1$pv_730_3650[c(6*365+test_data$days_after_jan_2017[i]+365+365/2)],
-                                place1$pv_730_3650[c(6*365+test_data$days_after_jan_2017[i]+365*2+30)])
+  set.seed(123)
+  out <- calibrate(parameters = bednetparams_1,
+                   target = target,
+                   target_tt = target_tt,
+                   summary_function = summary_pfpr_2_10,
+                   tolerance = 0.02, 
+                   interval = c(1, 500))##upper bound needs to be high enough so negative differences are not returned in uniroot
+  
+  return(out$root)
   
 }
 
-sims_specific = data.frame(
-  clusters = rep(test_data$cluster,4),
-  time_point = rep(c(6,12,18,25),each=104),
-  PREV_OBS = c(pred_vs_empir[1,1,],pred_vs_empir[2,1,],pred_vs_empir[3,1,],pred_vs_empir[4,1,]),
-  PREV_EST = c(pred_vs_empir[1,2,],pred_vs_empir[2,2,],pred_vs_empir[3,2,],pred_vs_empir[4,2,])
-)
-write.csv(sims_specific,"plots/specific_params_sim_1.csv")
-####################################
-##
-##
-## Are we any good?
-plot(pred_vs_empir[,2,1]~pred_vs_empir[,1,1],ylim=c(0,1),xlim=c(0,1))
+# eir_est = numeric(104)
 for(i in 1:104){
-  points(pred_vs_empir[1,2,i]~pred_vs_empir[1,1,i],pch=19,col = "red")
-  points(pred_vs_empir[2,2,i]~pred_vs_empir[2,1,i],pch=19,col = "orange")
-  points(pred_vs_empir[3,2,i]~pred_vs_empir[3,1,i],pch=19,col = "yellow")
-  points(pred_vs_empir[4,2,i]~pred_vs_empir[4,1,i],pch=19,col = "blue")
-
+  eir_est[i] = cali_clusters_f(i)
 }
 
+## 44 is higher!
+
+test_data$eir_est = eir_est
+write.csv(test_data,"C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/raw data/data_with_calibrated_eir.csv")
+
+plot(test_data$eir_est ~ test_data$Prevalence_baseline_2_10_yrs,
+     cex = 1+log(1+test_data$LLIN_USE_BASELINE),col=adegenet::transp("grey",0.6),pch=19)
+points(test_data$eir_est[test_data$res_2 > 0.68] ~ 
+         test_data$Prevalence_baseline_2_10_yrs[test_data$res_2 > 0.68],
+       cex = 1+log(1+test_data$LLIN_USE_BASELINE),
+       col="blue",pch=19)
+# 
+# xx = seq(0,1,length=20)
+# alpha = -3.4
+# beta =7
+# yy = 1 / (1 + exp(-alpha - 
+#                     beta*xx))
+# xx
+# yy_est = 100 * (1 / (1 + exp(-alpha - 
+#                         beta*test_data$Prevalence_baseline_2_10_yrs)))
 
 
-##################################
-###
-### A simple example:
-dat_row = 1
+
+
+test_data$EIR = comparison_accept
+
+dat_row = 2
 year=365
 
-
-place1 = malsim_actual_f(test_data,i,eir=test_data$eir_est[i])
-place1$pv_730_3650 = place1$n_detect_730_3650/place1$n_730_3650
-
-
-plot(place1$pv_730_3650 ~ place1$timestep,xlim=c(5.5*365,8.5*365),ylim=c(0,1),type="l")
-
+place1 = malsim_actual_f(test_data,dat_row,eir=test_data$eir_est[dat_row])
+plot(place1$prev_pyr ~ place1$timestep,xlim=c(5.5*365,8.5*365),ylim=c(0,1),type="l")
 points(test_data$Prevalence_baseline_2_10_yrs[dat_row]~c(6*365+test_data$days_after_jan_2017[dat_row]-30),
        col="orange",pch=19)
 
@@ -218,4 +223,3 @@ points(test_data$Prevalence_18m[dat_row]~
 points(test_data$Prevalence_25m[dat_row]~
          c(6*365+test_data$days_after_jan_2017[dat_row]+365*2+30),
        col="red",pch=19)
-
