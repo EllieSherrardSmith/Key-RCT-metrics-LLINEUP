@@ -324,7 +324,7 @@ scenario_1_1 = read.csv("simulation-summary/mod_sims_scenario_1_1.csv",header=TR
 ## input parameters for scenario
 test_data = read.csv("C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/simulation-summary/scenario_1-1.csv",header=TRUE)
 ## looking across clusters
-dat = read.csv("simulation-summary/scenario_1-1.csv",header=TRUE)
+dat = read.csv("simulation-summary/scenario_2.csv",header=TRUE)
 
 plot(scenario_1_1$cluster1_prev ~ scenario_1_1$timestep,type="l",
      ylab = "Prevalence in children 6m to 10yrs (%)",yaxt="n",ylim=c(0,0.8),
