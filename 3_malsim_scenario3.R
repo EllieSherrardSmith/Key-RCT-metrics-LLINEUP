@@ -167,7 +167,7 @@ for(i in 1:nrow(test_data)){
 }
 test_data$eir_est = eir_est
 
-# write.csv(test_data,"C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/simulation-summary/scenario_1_3.csv")
+# write.csv(test_data,"C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/simulation-summary/scenario_3.csv")
 
 
 
@@ -311,7 +311,7 @@ for(i in 1:nrow(test_data)){
 }
 
 
-# write.csv(mod_sims_scenario_1_3, "simulation-summary/mod_sims_scenario_3.csv")
+# write.csv(mod_sims_scenario_3, "simulation-summary/mod_sims_scenario_3.csv")
 
 
 ########################################
@@ -321,13 +321,13 @@ for(i in 1:nrow(test_data)){
 ########################################
 
 ## simulations for prevalence
-scenario_1_3 = read.csv("simulation-summary/mod_sims_scenario_1_3.csv",header=TRUE)[,2:106]
+scenario_3 = read.csv("simulation-summary/mod_sims_scenario_3.csv",header=TRUE)[,2:106]
 ## input parameters for scenario
-test_data = read.csv("C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/simulation-summary/scenario_1-3.csv",header=TRUE)
+test_data = read.csv("C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/simulation-summary/scenario_3.csv",header=TRUE)
 ## looking across clusters
 dat = read.csv("simulation-summary/scenario_2.csv",header=TRUE)
 
-plot(scenario_1_3$cluster1_prev ~ scenario_1_3$timestep,type="l",
+plot(scenario_3$cluster1_prev ~ scenario_3$timestep,type="l",
      ylab = "Prevalence in children 6m to 10yrs (%)",yaxt="n",ylim=c(0,0.8),
      xlab = "Time in days",col="darkred",xlim=c(2300,3500)
 )
@@ -353,14 +353,14 @@ points(target ~ target_tt,col = cols2)
 ## that the clusters match with the net types and 
 ## colours align 
 par(mfrow=c(2,2))
-plot(scenario_1_3[,2] ~ scenario_1_3$timestep,type="l",
+plot(scenario_3[,2] ~ scenario_3$timestep,type="l",
      ylab = "Prevalence in children 6m to 10yrs (%)",yaxt="n",ylim=c(0,0.8),
      xlab = "Time in days",col="white",xlim=c(2300,3500)
 )
 axis(2,las=2,at=seq(0,1,0.2),labels=seq(0,100,20))
 which(test_data$Net_Type == "Olyset Net")
 for(i in c(which(test_data$Net_Type == "Olyset Net")+1)){
-  lines(scenario_1_3[,i] ~ scenario_1_3$timestep,col="darkred")
+  lines(scenario_3[,i] ~ scenario_3$timestep,col="darkred")
 }
 unique(test_data$days_after_jan_2017)
 timestep = 6 * year + c(unique(test_data$days_after_jan_2017))
@@ -387,7 +387,7 @@ points(dat$Prevalence_25m[dat$Net_Type == "Olyset Net"]~
        col=adegenet::transp("red",0.2),pch=19)
 
 
-plot(scenario_1_3[,2] ~ scenario_1_3$timestep,type="l",
+plot(scenario_3[,2] ~ scenario_3$timestep,type="l",
      ylab = "Prevalence in children 6m to 10yrs (%)",yaxt="n",ylim=c(0,0.8),
      xlab = "Time in days",col="white",xlim=c(2300,3500)
 )
@@ -395,7 +395,7 @@ axis(2,las=2,at=seq(0,1,0.2),labels=seq(0,100,20))
 abline(v=timestep,lty=2)
 
 for(i in c(which(test_data$Net_Type == "Olyset Plus")+1)){
-  lines(scenario_1_3[,i] ~ scenario_1_3$timestep,col="orange")
+  lines(scenario_3[,i] ~ scenario_3$timestep,col="orange")
 }
 points(target[dat$Net_Type == "Olyset Plus"] ~ target_tt[dat$Net_Type == "Olyset Plus"],
        col = cols2[dat$Net_Type == "Olyset Plus"])
@@ -413,7 +413,7 @@ points(dat$Prevalence_25m[dat$Net_Type == "Olyset Plus"]~
        col=adegenet::transp("darkorange",0.2),pch=19)
 
 
-plot(scenario_1_3[,2] ~ scenario_1_3$timestep,type="l",
+plot(scenario_3[,2] ~ scenario_3$timestep,type="l",
      ylab = "Prevalence in children 6m to 10yrs (%)",yaxt="n",ylim=c(0,0.8),
      xlab = "Time in days",col="white",xlim=c(2300,3500)
 )
@@ -421,7 +421,7 @@ axis(2,las=2,at=seq(0,1,0.2),labels=seq(0,100,20))
 abline(v=timestep,lty=2)
 
 for(i in c(which(test_data$Net_Type == "PermaNet 2.0")+1)){
-  lines(scenario_1_3[,i] ~ scenario_1_3$timestep,col="blue")
+  lines(scenario_3[,i] ~ scenario_3$timestep,col="blue")
 }
 points(target[dat$Net_Type == "PermaNet 2.0"] ~ target_tt[dat$Net_Type == "PermaNet 2.0"],
        col = cols2[dat$Net_Type == "PermaNet 2.0"])
@@ -439,7 +439,7 @@ points(dat$Prevalence_25m[dat$Net_Type == "PermaNet 2.0"]~
        col=adegenet::transp("darkblue",0.2),pch=19)
 
 
-plot(scenario_1_3$cluster1_prev ~ scenario_1_3$timestep,type="l",
+plot(scenario_3$cluster1_prev ~ scenario_3$timestep,type="l",
      ylab = "Prevalence in children 6m to 10yrs (%)",yaxt="n",ylim=c(0,0.8),
      xlab = "Time in days",col="white",xlim=c(2300,3500)
 )
@@ -447,7 +447,7 @@ axis(2,las=2,at=seq(0,1,0.2),labels=seq(0,100,20))
 abline(v=timestep,lty=2)
 
 for(i in c(which(test_data$Net_Type == "PermaNet 3.0")+1)){
-  lines(scenario_1_3[,i] ~ scenario_1_3$timestep,col="darkgreen")
+  lines(scenario_3[,i] ~ scenario_3$timestep,col="darkgreen")
 }
 points(target[dat$Net_Type == "PermaNet 3.0"] ~ target_tt[dat$Net_Type == "PermaNet 3.0"],
        col = cols2[dat$Net_Type == "PermaNet 3.0"])
@@ -493,37 +493,37 @@ prev_obs = c(dat$Prevalence_6m[dat$Net_Type == "Olyset Net"],
 prev_mod_ol = array(dim=c(4,length(which(test_data$Net_Type == "Olyset Net"))))
 olys = c(which(test_data$Net_Type == "Olyset Net")+1)
 for(i in 1:length(c(which(test_data$Net_Type == "Olyset Net")))){
-  prev_mod_ol[1,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365/2),olys[i]]
-  prev_mod_ol[2,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365),olys[i]]
-  prev_mod_ol[3,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365+365/2),olys[i]]
-  prev_mod_ol[4,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365*2+30),olys[i]] 
+  prev_mod_ol[1,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365/2),olys[i]]
+  prev_mod_ol[2,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365),olys[i]]
+  prev_mod_ol[3,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365+365/2),olys[i]]
+  prev_mod_ol[4,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365*2+30),olys[i]] 
 }
 
 prev_mod_olP = array(dim=c(4,length(which(test_data$Net_Type == "Olyset Plus"))))
 olyP = c(which(test_data$Net_Type == "Olyset Plus")+1)
 for(i in 1:length(c(which(test_data$Net_Type == "Olyset Plus")))){
-  prev_mod_olP[1,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365/2),olyP[i]]
-  prev_mod_olP[2,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365),olyP[i]]
-  prev_mod_olP[3,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365+365/2),olyP[i]]
-  prev_mod_olP[4,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365*2+30),olyP[i]] 
+  prev_mod_olP[1,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365/2),olyP[i]]
+  prev_mod_olP[2,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365),olyP[i]]
+  prev_mod_olP[3,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365+365/2),olyP[i]]
+  prev_mod_olP[4,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365*2+30),olyP[i]] 
 }
 
 prev_mod_Pe2 = array(dim=c(4,length(which(test_data$Net_Type == "PermaNet 2.0"))))
 Per2 = c(which(test_data$Net_Type == "PermaNet 2.0")+1)
 for(i in 1:length(c(which(test_data$Net_Type == "PermaNet 2.0")))){
-  prev_mod_Pe2[1,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365/2),Per2[i]]
-  prev_mod_Pe2[2,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365),Per2[i]]
-  prev_mod_Pe2[3,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365+365/2),Per2[i]]
-  prev_mod_Pe2[4,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365*2+30),Per2[i]] 
+  prev_mod_Pe2[1,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365/2),Per2[i]]
+  prev_mod_Pe2[2,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365),Per2[i]]
+  prev_mod_Pe2[3,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365+365/2),Per2[i]]
+  prev_mod_Pe2[4,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365*2+30),Per2[i]] 
 }
 
 prev_mod_Pe3 = array(dim=c(4,length(which(test_data$Net_Type == "PermaNet 3.0"))))
 Per3 = c(which(test_data$Net_Type == "PermaNet 3.0")+1)
 for(i in 1:length(c(which(test_data$Net_Type == "PermaNet 3.0")))){
-  prev_mod_Pe3[1,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365/2),Per3[i]]
-  prev_mod_Pe3[2,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365),Per3[i]]
-  prev_mod_Pe3[3,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365+365/2),Per3[i]]
-  prev_mod_Pe3[4,i] = scenario_1_3[c(6*365+dat$days_after_jan_2017[i]+365*2+30),Per3[i]] 
+  prev_mod_Pe3[1,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365/2),Per3[i]]
+  prev_mod_Pe3[2,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365),Per3[i]]
+  prev_mod_Pe3[3,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365+365/2),Per3[i]]
+  prev_mod_Pe3[4,i] = scenario_3[c(6*365+dat$days_after_jan_2017[i]+365*2+30),Per3[i]] 
 }
 
 prev_mod = c(prev_mod_ol[1,],prev_mod_ol[2,],prev_mod_ol[3,],prev_mod_ol[4,],
