@@ -325,7 +325,7 @@ scenario_1_2 = read.csv("simulation-summary/mod_sims_scenario_1_2.csv",header=TR
 ## input parameters for scenario
 test_data = read.csv("C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/simulation-summary/scenario_1-2.csv",header=TRUE)
 ## looking across clusters
-dat = read.csv("simulation-summary/scenario_1_2.csv",header=TRUE)
+dat = read.csv("simulation-summary/scenario_2.csv",header=TRUE)
 
 plot(scenario_1_2$cluster1_prev ~ scenario_1_2$timestep,type="l",
      ylab = "Prevalence in children 6m to 10yrs (%)",yaxt="n",ylim=c(0,0.8),
@@ -532,7 +532,12 @@ prev_mod = c(prev_mod_ol[1,],prev_mod_ol[2,],prev_mod_ol[3,],prev_mod_ol[4,],
              prev_mod_Pe3[1,],prev_mod_Pe3[2,],prev_mod_Pe3[3,],prev_mod_Pe3[4,])
 
 plot(prev_obs ~ prev_mod, ylim=c(0,0.8),xlim=c(0,0.8),
+     main = "Scenario 1-3: Deployment month",
+     ylab="Trial reported prevalence (%)",yaxt="n",
+     xlab = "Model simulated prevalence (%)",xaxt="n",
      col=adegenet::transp(rep(cols,each=4),0.1),pch=19)
+axis(1, at = seq(0,1,0.2), labels = seq(0,100,20))
+axis(2, las = 2, at = seq(0,1,0.2), labels = seq(0,100,20))
 abline(a=0,b=1,lty=2)
 
 prev_obs_means = c(mean(prev_obs[1:52],na.rm=TRUE),
@@ -547,4 +552,4 @@ prev_mod_means = c(mean(prev_mod[1:52],na.rm=TRUE),
 
 points(prev_obs_means ~ prev_mod_means,col=cols,pch=19,cex=1.2)
 
-
+summary.lm(lm(prev_obs ~ prev_mod))
