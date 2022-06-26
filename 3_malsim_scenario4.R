@@ -155,14 +155,14 @@ cali_clusters_f = function(dat_row){
                    target_tt = target_tt,
                    summary_function = summary_pfpr_2_10,
                    tolerance = 0.02, 
-                   interval = c(1, 600))##upper bound needs to be high enough so negative differences are not returned in uniroot
+                   interval = c(1, 1000))##upper bound needs to be high enough so negative differences are not returned in uniroot
   
   return(out$root)
   
 }
 
 # eir_est = numeric(nrow(test_data))
-for(i in 57:nrow(test_data)){
+for(i in 99:nrow(test_data)){
   eir_est[i] = cali_clusters_f(i)
 }
 test_data$eir_est = eir_est
@@ -303,6 +303,7 @@ mod_sims_scenario_4 = expand.grid(
 )
 for(i in 1:nrow(test_data)){
   mod_sims_scenario_4[,i+1] = uganda_1_f(i)[,2]
+  print(i)
 }
 
 for(i in 1:nrow(test_data)){
