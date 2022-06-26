@@ -1,0 +1,102 @@
+Trial_code,Est_Start,Inter_Type,Net,Net_insecticide,N_washes,Bioassay_type,Bioassay_N_known,Bioassay_N_tested,Bioassay_N_dead,Bioassay_mort,Bioassay_insecticide,conc,Nights_known,Nights_collected,N_total,N_dead,Perc_dead,Species,Hut,Country,Site,nsites,rep_studies,Control_type,Control_total,Control_dead,Control_perc_dead
+1,2010,LLIN,LifeNet,deltamethrin,0,WHO,1,97,23,23.71,deltamethrin,0.05,0,36,676,304,44.97,An. gambiae s.s.,West,Benin,Malanville_Benin,8,1,Unt_net,911,15,1.65
+1,2010,LLIN,LifeNet,deltamethrin,0,WHO,1,97,30,30.93,permethrin,0.75,0,36,676,304,44.97,An. gambiae s.s.,West,Benin,Malanville_Benin,8,1,Unt_net,911,15,1.65
+2,2010,LLIN,LifeNet,deltamethrin,0,WHO,1,61,43,70.49,deltamethrin,0.05,0,48,63,28,44.44,An. gambiae s.s.,West,Benin,Akron_Benin,1,2,Unt_net,144,23,15.97
+2,2010,LLIN,LifeNet,deltamethrin,0,WHO,1,64,25,39.06,permethrin,0.75,0,48,63,28,44.44,An. gambiae s.s.,West,Benin,Akron_Benin,1,2,Unt_net,144,23,15.97
+3,2011,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,80,15,18.75,deltamethrin,0.05,1,40,426,247,57.98,An. arabiensis,East,Ethiopia,GGDam_Ethopia,3,3,Unt_net,511,294,57.53
+4,2008,CTN,NA,deltamethrin,0,WHO,1,100,85,85,deltamethrin,0.05,1,72,297,182,61.2,An. gambiae s.s.,West,Benin,Malanville_Benin,8,4,Unt_net,285,12,4.2
+4,2008,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,100,85,85,deltamethrin,0.05,1,72,243,216,88.8,An. gambiae s.s.,West,Benin,Malanville_Benin,8,4,Unt_net,285,12,4.2
+5,2007,CTN,NA,deltamethrin,0,WHO,1,100,23,23,deltamethrin,0.05,1,36,1056,302,28.6,An. gambiae s.s.,West,Burkina Faso,VDK_BurkinaFaso,13,5,Unt_net,908,44,4.9
+5,2007,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,100,23,23,deltamethrin,0.05,1,36,329,146,44.4,An. gambiae s.s.,West,Burkina Faso,VDK_BurkinaFaso,13,5,Unt_net,908,44,4.9
+6,2008,CTN,NA,deltamethrin,0,WHO,1,100,84,84,permethrin,0.75,1,36,265,111,41.9,An. gambiae s.l.,West,Cameroon,Pitoa_Cameroon,10,6,Unt_net,401,52,12.9
+6,2008,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,100,70,70,deltamethrin,0.05,1,36,105,87,82.9,An. gambiae s.l.,West,Cameroon,Pitoa_Cameroon,10,6,Unt_net,401,52,12.9
+7,2013,LLIN,Yorkool,deltamethrin,0,WHO,1,80,6,7.5,permethrin,0.75,1,98,389,224,57.58,An. gambiae s.l.,West,Togo,Kolokope_Togo,4,7,Unt_net,465,9,1.94
+7,2013,LLIN,Yorkool,deltamethrin,0,WHO,1,74,11,14.8,deltamethrin,0.05,1,98,389,224,57.58,An. gambiae s.l.,West,Togo,Kolokope_Togo,4,7,Unt_net,465,9,1.94
+7,2013,LLIN,Yorkool,deltamethrin,0,WHO,1,85,1,1.2,lambdacyhalothrin,0.05,1,98,389,224,57.58,An. gambiae s.l.,West,Togo,Kolokope_Togo,4,7,Unt_net,465,9,1.94
+8,2009,LLIN,PermaNet 2.0,deltamethrin,0,WHO,0,50,22,43.9,permethrin,0.75,1,360,317,110,34.7,An. gambiae s.s.,West,Cote d'Ivoire,Yaokoffikro_Cotedivoire,15,8,Unt_net,796,54,6.8
+8,2009,LLIN,PermaNet 2.0,deltamethrin,0,WHO,0,50,5,10.6,deltamethrin,0.05,1,360,317,110,34.7,An. gambiae s.s.,West,Cote d'Ivoire,Yaokoffikro_Cotedivoire,15,8,Unt_net,796,54,6.8
+9,2013,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,100,29,29,permethrin,0.75,1,25,10,6,50,An. gambiae s.l.,East,Tanzania,LowerMoshi_Tanzania,5,9,Unt_net,75,1,1.3
+9,2013,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,100,29,28.8,deltamethrin,0.05,1,25,10,6,50,An. gambiae s.l.,East,Tanzania,LowerMoshi_Tanzania,5,9,Unt_net,75,1,1.3
+10,2006,LLIN,Interceptor,alphacypermethrin,0,WHO,1,351,351,100,alphacypermethrin,0.05,1,60,134,124,92.54,An. gambiae,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,171,12,7.02
+10,2006,LLIN,Interceptor,alphacypermethrin,0,WHO,1,401,401,100,alphacypermethrin,0.05,1,60,68,56,82.35,An. funestus,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,81,11,13.58
+11,2005,CTN,NA,alphacypermethrin,0,WHO,1,164,164,100,permethrin,0.75,1,60,93,67,72,An. gambiae s.s.,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,112,4,3.6
+11,2005,CTN,NA,alphacypermethrin,0,WHO,1,166,166,100,deltamethrin,0.05,1,60,93,67,72,An. gambiae s.s.,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,112,4,3.6
+11,2005,CTN,NA,alphacypermethrin,0,WHO,1,229,229,100,permethrin,0.75,1,60,211,149,70.6,An. funestus,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,315,25,7.9
+11,2005,CTN,NA,alphacypermethrin,0,WHO,1,104,104,100,deltamethrin,0.05,1,60,211,149,70.6,An. funestus,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,315,25,7.9
+11,2005,LLIN,Olyset Net,permethrin,0,WHO,1,164,164,100,permethrin,0.75,1,60,177,111,62.7,An. gambiae s.s.,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,112,4,3.6
+11,2005,LLIN,Olyset Net,permethrin,0,WHO,1,166,166,100,deltamethrin,0.05,1,60,177,111,62.7,An. gambiae s.s.,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,112,4,3.6
+11,2005,LLIN,Olyset Net,permethrin,0,WHO,1,229,229,100,permethrin,0.75,1,60,222,164,73.9,An. funestus,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,315,25,7.9
+11,2005,LLIN,Olyset Net,permethrin,0,WHO,1,104,104,100,deltamethrin,0.05,1,60,222,164,73.9,An. funestus,East,Tanzania,Zeneti_Tanzania,16,10,Unt_net,315,25,7.9
+12,2005,LLIN,Olyset Net,permethrin,0,WHO,1,100,96,96,permethrin,0.75,1,24,196,23,11.8,An. arabiensis,East,Tanzania,Mabogini_Tanzania,7,11,Unt_bedsheet,195,0,0
+12,2005,LLIN,Olyset Net,permethrin,0,WHO,1,100,100,100,deltamethrin,0.05,1,24,196,23,11.8,An. arabiensis,East,Tanzania,Mabogini_Tanzania,7,11,Unt_bedsheet,195,0,0
+13,2012,LLIN,Interceptor,alphacypermethrin,0,WHO,0,50,4,8,permethrin,0.75,1,72,631,125,19.81,An. gambiae s.l.,West,Benin,Cove_Benin,2,12,Unt_net,673,19,2.82
+13,2012,LLIN,Interceptor,alphacypermethrin,0,WHO,0,50,6,12,deltamethrin,0.05,1,72,631,125,19.81,An. gambiae s.l.,West,Benin,Cove_Benin,2,12,Unt_net,673,19,2.82
+14,2012,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,99,43,43,deltamethrin,0.05,0,12,108,68,62.96,An. gambiae,West,Cote d'Ivoire,Tiassale_Cotedivoire,12,13,Unt_net,130,20,15.38
+15,2015,LLIN,Interceptor,alphacypermethrin,0,WHO,1,100,8,8,permethrin,0.75,1,54,175,20,11.43,An. gambiae s.l.,West,Benin,Cove_Benin,2,14,Unt_net,310,8,2.58
+15,2015,LLIN,Interceptor,alphacypermethrin,0,WHO,1,100,10,10,deltamethrin,0.05,1,54,175,20,11.43,An. gambiae s.l.,West,Benin,Cove_Benin,2,14,Unt_net,310,8,2.58
+16,2010,LLIN,Olyset Net,permethrin,0,WHO,1,100,10,10,permethrin,0.75,1,42,3804,1228,32.28,An. gambiae,West,Benin,Cove_Benin,2,14,Unt_net,2874,159,5.53
+17,2011,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,100,2,2,deltamethrin,0.05,0,24,42,25,59.52,An. gambiae s.s.,West,Burkina Faso,VDK_BurkinaFaso,13,15,Unt_net,81,12,14.81
+18,2011,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,100,2,2,deltamethrin,0.05,0,24,72,32,44.44,An. gambiae s.s.,West,Burkina Faso,VDK_BurkinaFaso,13,15,Unt_net,255,24,9.41
+19,2010,LLIN,Olyset Net,permethrin,0,WHO,1,125,119,95.2,permethrin,0.75,1,60,6047,709,11.72,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+19,2010,LLIN,Olyset Net,permethrin,0,WHO,1,96,92,95.8,deltamethrin,0.05,1,60,6047,709,11.72,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+19,2010,LLIN,Olyset Net,permethrin,0,WHO,1,123,111,90.2,lambdacyhalothrin,0.05,1,60,6047,709,11.72,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+19,2010,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,125,119,95.2,permethrin,0.75,1,60,4420,844,19.1,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+19,2010,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,96,92,95.8,deltamethrin,0.05,1,60,4420,844,19.1,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+19,2010,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,123,111,90.2,lambdacyhalothrin,0.05,1,60,4420,844,19.1,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+19,2010,LLIN,Icon Life,deltamethrin,0,WHO,1,125,119,95.2,permethrin,0.75,1,60,6492,1028,15.83,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+19,2010,LLIN,Icon Life,deltamethrin,0,WHO,1,96,92,95.8,deltamethrin,0.05,1,60,6492,1028,15.83,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+19,2010,LLIN,Icon Life,deltamethrin,0,WHO,1,123,111,90.2,lambdacyhalothrin,0.05,1,60,6492,1028,15.83,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,4596,403,8.77
+20,2010,LLIN,Olyset Net,permethrin,0,WHO,1,125,119,95.2,permethrin,0.75,1,90,9789,1742,17.8,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+20,2010,LLIN,Olyset Net,permethrin,0,WHO,1,96,92,95.8,deltamethrin,0.05,1,90,9789,1742,17.8,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+20,2010,LLIN,Olyset Net,permethrin,0,WHO,1,123,111,90.2,lambdacyhalothrin,0.05,1,90,9789,1742,17.8,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+20,2010,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,125,119,95.2,permethrin,0.75,1,90,8240,1644,19.95,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+20,2010,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,96,92,95.8,deltamethrin,0.05,1,90,8240,1644,19.95,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+20,2010,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,123,111,90.2,lambdacyhalothrin,0.05,1,90,8240,1644,19.95,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+20,2010,LLIN,Icon Life,deltamethrin,0,WHO,1,125,119,95.2,permethrin,0.75,1,90,11279,2121,18.8,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+20,2010,LLIN,Icon Life,deltamethrin,0,WHO,1,96,92,95.8,deltamethrin,0.05,1,90,11279,2121,18.8,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+20,2010,LLIN,Icon Life,deltamethrin,0,WHO,1,123,111,90.2,lambdacyhalothrin,0.05,1,90,11279,2121,18.8,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,16,Unt_net,7181,968,13.48
+21,2011,LLIN,Olyset Net,permethrin,0,WHO,1,100,22,22,permethrin,0.75,1,72,96,40,42,An. gambiae s.l.,West,Benin,Malanville_Benin,8,17,Unt_net,69,0,0
+22,2014,LLIN,DawaPlus 2.0,deltamethrin,0,WHO,1,153,8,5,permethrin,0.75,1,36,1457,424,29.1,An. gambiae s.l.,West,Burkina Faso,VDK_BurkinaFaso,13,18,Unt_net,1095,204,18.63
+22,2014,LLIN,DawaPlus 2.0,deltamethrin,0,WHO,1,163,4,2.5,deltamethrin,0.05,1,36,1457,424,29.1,An. gambiae s.l.,West,Burkina Faso,VDK_BurkinaFaso,13,18,Unt_net,1095,204,18.63
+22,2014,LLIN,Olyset Net,permethrin,0,WHO,1,153,8,5,permethrin,0.75,1,36,1458,454,31.14,An. gambiae s.l.,West,Burkina Faso,VDK_BurkinaFaso,13,18,Unt_net,1095,204,18.63
+22,2014,LLIN,Olyset Net,permethrin,0,WHO,1,163,4,2.5,deltamethrin,0.05,1,36,1458,454,31.14,An. gambiae s.l.,West,Burkina Faso,VDK_BurkinaFaso,13,18,Unt_net,1095,204,18.63
+22,2014,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,153,8,5,permethrin,0.75,1,36,1075,384,35.72,An. gambiae s.l.,West,Burkina Faso,VDK_BurkinaFaso,13,18,Unt_net,1095,204,18.63
+22,2014,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,163,4,2.5,deltamethrin,0.05,1,36,1075,384,35.72,An. gambiae s.l.,West,Burkina Faso,VDK_BurkinaFaso,13,18,Unt_net,1095,204,18.63
+23,2014,LLIN,DawaPlus 2.0,deltamethrin,0,WHO,1,101,14,14,permethrin,0.75,1,36,626,94,15.02,An. gambiae s.l.,West,Burkina Faso,Tengrela_BurkinaFaso,11,19,Unt_net,482,39,8.09
+23,2014,LLIN,DawaPlus 2.0,deltamethrin,0,WHO,1,85,29,34,deltamethrin,0.05,1,36,626,94,15.02,An. gambiae s.l.,West,Burkina Faso,Tengrela_BurkinaFaso,11,19,Unt_net,482,39,8.09
+23,2014,LLIN,Olyset Net,permethrin,0,WHO,1,101,14,14,permethrin,0.75,1,36,922,179,19.41,An. gambiae s.l.,West,Burkina Faso,Tengrela_BurkinaFaso,11,19,Unt_net,482,39,8.09
+23,2014,LLIN,Olyset Net,permethrin,0,WHO,1,85,29,34,deltamethrin,0.05,1,36,922,179,19.41,An. gambiae s.l.,West,Burkina Faso,Tengrela_BurkinaFaso,11,19,Unt_net,482,39,8.09
+23,2014,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,101,14,14,permethrin,0.75,1,36,859,173,20.14,An. gambiae s.l.,West,Burkina Faso,Tengrela_BurkinaFaso,11,19,Unt_net,482,39,8.09
+23,2014,LLIN,PermaNet 2.0,deltamethrin,0,WHO,1,85,29,34,deltamethrin,0.05,1,36,859,173,20.14,An. gambiae s.l.,West,Burkina Faso,Tengrela_BurkinaFaso,11,19,Unt_net,482,39,8.09
+24,2008,LLIN,PermaNet 2.0,deltamethrin,0,WHO,0,50,50,100,deltamethrin,0.05,1,54,574,548,96,An. gambiae s.s.,East,Tanzania,Zeneti_Tanzania,16,20,Unt_net,723,108,15
+25,2015,LLIN,MAGNet,alphacypermethrin,0,NA,0,50,19,38,permethrin,0.75,1,25,1070,108,10.1,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,20,Unt_net,810,48,5.9
+25,2015,LLIN,MAGNet,alphacypermethrin,0,NA,0,50,45,90,deltamethrin,0.05,1,25,1070,108,10.1,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,20,Unt_net,810,48,5.9
+25,2015,LLIN,MAGNet,alphacypermethrin,0,NA,0,50,11,22,lambdacyhalothrin,0.05,1,25,1070,108,10.1,An. arabiensis,Ifakara,Tanzania,Lupiro_Tanzania,6,20,Unt_net,810,48,5.9
+26,2015,LLIN,Interceptor,alphacypermethrin,0,NA,0,50,29,57,permethrin,0.75,1,54,94,14,14.89,An. funestus,East,Tanzania,Muheza_Tanzania,9,21,Unt_net,139,13,9.35
+27,2000,CTN,Talstar 80 SC,bifenthrin,0,pre2000,0,50,50,100,pyrethroid,NA,1,42,89,74,81.4,An. gambiae s.s.,West,Cote d'Ivoire,Yaokoffikro_CotedIvoire,15,22,Unt_net,84,8,9.5
+27,2000,LLIN,PermaNet,deltamethrin,0,pre2000,0,50,50,100,pyrethroid,NA,1,42,69,60,85.5,An. gambiae s.s.,West,Cote d'Ivoire,Yaokoffikro_Cotedivoire,15,22,Unt_net,84,8,9.5
+28,2005,CTN,K-Othrine,deltamethrin,0,WHO,1,100,96,96,permethrin,0.75,1,24,361,181,50.1,An. arabiensis,East,Tanzania,Mabogini_Tanzania,7,23,Unt_net,521,133,25.5
+28,2005,CTN,K-Othrine,deltamethrin,0,WHO,1,100,100,100,deltamethrin,0.05,1,24,361,181,50.1,An. arabiensis,East,Tanzania,Mabogini_Tanzania,7,23,Unt_net,521,133,25.5
+28,2005,CTN,Fendona,alphacypermethrin,0,WHO,1,100,96,96,permethrin,0.75,1,24,391,195,49.9,An. arabiensis,East,Tanzania,Mabogini_Tanzania,7,23,Unt_net,521,133,25.5
+28,2005,CTN,Fendona,alphacypermethrin,0,WHO,1,100,100,100,deltamethrin,0.05,1,24,391,195,49.9,An. arabiensis,East,Tanzania,Mabogini_Tanzania,7,23,Unt_net,521,133,25.5
+28,2005,CTN,Ambush,permethrin,0,WHO,1,100,96,96,permethrin,0.75,1,24,337,124,36.8,An. arabiensis,East,Tanzania,Mabogini_Tanzania,7,23,Unt_net,521,133,25.5
+28,2005,CTN,Ambush,permethrin,0,WHO,1,100,100,100,deltamethrin,0.05,1,24,337,124,36.8,An. arabiensis,East,Tanzania,Mabogini_Tanzania,7,23,Unt_net,521,133,25.5
+29,2009,CTN,Fendona SC,alphacypermethrin,0,WHO,0,50,38,76,permethrin,0.75,1,16,110,55,50,An. arabiensis,East,Tanzania,LowerMoshi_Tanzania,5,24,Unt_net,143,22,15
+29,2009,CTN,Fendona SC,alphacypermethrin,0,WHO,0,50,29,58,lambdacyhalothrin,0.05,1,16,110,55,50,An. arabiensis,East,Tanzania,LowerMoshi_Tanzania,5,24,Unt_net,143,22,15
+30,1986,CTN,Cymperator 10% EC,cypermethrin,0,pre2000,0,50,50,100,pyrethroid,NA,1,18,46,41,89.1,An. gambiae s.l.,East,The Gambia,WaliKunda_TheGambia,14,25,Unt_net,43,18,42
+30,1986,CTN,Descis 2.5% EC,deltamethrin,0,pre2000,0,50,50,100,pyrethroid,NA,1,18,38,35,92.1,An. gambiae s.l.,East,The Gambia,WaliKunda_TheGambia,14,25,Unt_net,43,18,42
+30,1986,CTN,Icon 2.5% EC,lambdacyhalothrin,0,pre2000,0,50,50,100,pyrethroid,NA,1,18,34,31,91.2,An. gambiae s.l.,East,The Gambia,WaliKunda_TheGambia,14,25,Unt_net,43,18,42
+30,1986,CTN,Imperator 25% EC,permethrin,0,pre2000,0,50,50,100,pyrethroid,NA,1,18,18,12,66.7,An. gambiae s.l.,East,The Gambia,WaliKunda_TheGambia,14,25,Unt_net,43,18,42
+31,2006,CTN,NA,deltamethrin,0,WHO,1,100,100,100,deltamethrin,0.05,1,12,238,108,45.4,An. arabiensis,East,Tananzania,Mabogini_Tanzania,7,26,Unt_net,511,27,5.3
+32,1997,CTN,Peripel 10% EC,permethrin,0,WHO,0,50,2,3.9,permethrin,1,0,18,307,123,40,An. gambiae s.s.,West,Cote d'Ivoire,Yaokoffikro_CotedIvoire,15,27,Unt_net,373,16,4
+32,1997,CTN,Peripel 10% EC,permethrin,0,WHO,0,50,22,43.3,deltamethrin,0.05,0,18,307,123,40,An. gambiae s.s.,West,Cote d'Ivoire,Yaokoffikro_CotedIvoire,15,27,Unt_net,373,16,4
+32,1997,CTN,K-Othrine SC 25,deltamethrin,0,WHO,0,50,2,3.9,permethrin,1,0,18,211,118,56,An. gambiae s.s.,West,Cote d'Ivoire,Yaokoffikro_CotedIvoire,15,27,Unt_net,373,16,4
+32,1997,CTN,K-Othrine SC 25,deltamethrin,0,WHO,0,50,22,43.3,deltamethrin,0.05,0,18,211,118,56,An. gambiae s.s.,West,Cote d'Ivoire,Yaokoffikro_CotedIvoire,15,27,Unt_net,373,16,4
+33,2014,LLIN,Interceptor,alphacypermethrin,0,WHO,1,114,2,2,permethrin,0.75,1,36,519,112,21.6,An. gambiae s.l.,West,Burkina Faso,VDK_BurkinaFaso,13,28,Unt_net,853,82,9.6
+33,2014,LLIN,Interceptor,alphacypermethrin,0,WHO,1,113,0,0,deltamethrin,0.05,1,36,519,112,21.6,An. gambiae s.l.,West,Burkina Faso,VDK_BurkinaFaso,13,28,Unt_net,853,82,9.6
+34,2015,LLIN,Interceptor,alphacypermethrin,0,WHO,0,50,4,8,permethrin,0.75,1,54,175,19,11,An. gambiae s.l.,West,Benin,Cove_Benin,2,29,Unt_net,310,6,2
+34,2015,LLIN,Interceptor,alphacypermethrin,0,WHO,0,50,5,10,deltamethrin,0.05,1,54,175,19,11,An. gambiae s.l.,West,Benin,Cove_Benin,2,29,Unt_net,310,6,2
+35,2015,LLIN,Interceptor,alphacypermethrin,0,WHO,0,50,26,52.7,permethrin,0.75,1,36,80,10,12.5,An. funestus,East,Tanzania,Muheza_Tanzania,9,30,Unt_net,111,12,10.81
+36,2014,LLIN,Interceptor,alphacypermethrin,0,NA,0,50,36,71,permethrin,0.75,1,56,74,45,60.81,An. arabiensis,East,Tanzania,LowerMoshi_Tanzania,5,31,Unt_net,105,0,0
+37,2018,LLIN,Olyset Net,permethrin,0,WHO,1,100,8,8,permethrin,0.75,0,49,937,206,22,An. gambiae s.l.,West,Benin,Cove_Benin,2,32,Unt_net,812,11,1.4
+37,2018,LLIN,Olyset Net,permethrin,0,WHO,1,100,12,12,deltamethrin,0.05,0,49,937,206,22,An. gambiae s.l.,West,Benin,Cove_Benin,2,32,Unt_net,812,11,1.4
