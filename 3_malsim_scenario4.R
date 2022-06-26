@@ -155,14 +155,14 @@ cali_clusters_f = function(dat_row){
                    target_tt = target_tt,
                    summary_function = summary_pfpr_2_10,
                    tolerance = 0.02, 
-                   interval = c(1, 500))##upper bound needs to be high enough so negative differences are not returned in uniroot
+                   interval = c(1, 600))##upper bound needs to be high enough so negative differences are not returned in uniroot
   
   return(out$root)
   
 }
 
 # eir_est = numeric(nrow(test_data))
-for(i in 1:nrow(test_data)){
+for(i in 57:nrow(test_data)){
   eir_est[i] = cali_clusters_f(i)
 }
 test_data$eir_est = eir_est

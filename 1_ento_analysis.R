@@ -30,19 +30,94 @@ library(rstan)
 options(mc.cores = parallel::detectCores())
 # To avoid recompilation of unchanged Stan programs, we recommend calling
 rstan_options(auto_write = TRUE)
-setwd("E:/Mosquito net parameters")
+# setwd("E:/Mosquito net parameters")
+setwd("C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP")
 
 ###########################################
 ##
 ## Part 1:
 ##
 
+mt = read.csv("raw data/mortality_data_from_Nash2021.csv",header=TRUE)
+
+## remove Ifakara huts
+mt = subset(mt, mt$Hut != "Ifakara")
+library(dplyr)
+selectiona <- c("Olyset Net", "Interceptor", 
+                "PermaNet 2.0","PermaNet", 
+                "MiraNet",
+                "DuraNet","Duranet",
+                "Yahe",
+                "MAGNet", "DawaPlus 2.0", "Yorkool",
+                "Panda Net 2.0","PandaNet 2.0",
+                "Royal Sentry")
+mt <- mt %>% filter(Net%in%selectiona)
+
+data_list_MT = list(S = nrow(mt),
+                    N_b = mt$Bioassay_N_tested,
+                    N_h = mt$N_total,
+                    X_b = mt$Bioassay_N_tested - mt$Bioassay_N_dead,
+                    X_h = mt$N_total - mt$N_dead,
+                    nsite = length(unique(mt$Site)),
+                    site = as.numeric(factor(mt$Site)),
+                    S_test = 101,
+                    theta_b_test = seq(0,1,length=101))
+
+stan_base <- rstan::stan(file="R code/stan models/A1 Log-logistic Model.stan", 
+                         data=data_list_MT, 
+                         warmup=1000,
+                         control = list(adapt_delta = 0.8,
+                                        max_treedepth = 20),
+                         iter=2000, chains=4)
+base <- rstan::extract(stan_base)
+
+median(base$b)
+median(base$a)
+
+x = seq(0,1,length=101)
+surv = 1 - (1/(1+((1-x)/median(base$b))^(-median(base$a))))
+
+surv_low = 1 - (1/(1+((1-x)/quantile(base$b,0.1))^(-quantile(base$a,0.1))))
+surv_upp = 1 - (1/(1+((1-x)/quantile(base$b,0.9))^(-quantile(base$a,0.9))))
+
+par(mfrow=c(2,2))
+par(mar=c(5,6,3,3))
+
+plot(surv ~ x,type="l",
+     xlab = "Survival at discriminatory dose bioassay (%)",
+     ylab = "Survival in experimental hut trial (%)",
+     xaxt="n",yaxt="n",ylim=c(0,1),xlim=c(0,1),
+     cex.lab=1.2,cex.axis=1.2)
+axis(1,at=seq(0,1,by=0.2),labels=seq(0,100,by=20),cex.lab=1.2,cex.axis=1.2)
+axis(2,las=2,at=seq(0,1,by=0.2),labels=seq(0,100,by=20),cex.lab=1.2,cex.axis=1.2)
+
+dd = as.numeric(quantile(base$b,0.025))
+ff = as.numeric(quantile(base$b,0.975))
+which(base$b < dd+0.05 & base$b > dd)
+which(base$b > ff & base$b < ff+0.05)
+# for(i in c(305,2081)){
+#   surv = 1 - (1/(1+((1-x)/base$b[i])^(-base$a[i])))
+#   lines(surv ~ x,col="black")
+# }
+surv_upp = surv = 1 - (1/(1+((1-x)/base$b[which(base$b < dd+0.05 & base$b > dd)[1]])^(-median(base$a))))
+surv_low = surv = 1 - (1/(1+((1-x)/base$b[which(base$b > ff & base$b < ff+0.05)[1]])^(-(median(base$a)))))
+polygon(c(x,rev(x)),c(surv_low,rev(surv_upp)),col=adegenet::transp("yellow",0.4),border=NA)
+
+points(c((mt$Bioassay_N_tested - mt$Bioassay_N_dead)/mt$Bioassay_N_tested),
+       c((mt$N_total - mt$N_dead)/mt$N_total),col=adegenet::transp("orange",0.7),pch=19,
+       cex = c(log(50*(mt$N_total/max(mt$N_total))+1)))
+
+###########################################
+##
+## Part 2:
+##
+
 
 ##
 ## Drawing the figure
 ##
-par(mfrow=c(1,1))
-par(mar=c(5,6,3,3))
+# par(mfrow=c(1,1))
+# par(mar=c(5,6,3,3))
 
 
 
@@ -51,7 +126,8 @@ par(mar=c(5,6,3,3))
 ## Add PBO line
 
 #Global
-pbo_dat = read.csv("data/PPBO_Studies_v2.csv")
+# pbo_dat = read.csv("data/PPBO_Studies_v2.csv")
+pbo_dat = read.csv("raw data/PPBO_Studies_v2.csv")
 dim(pbo_dat)
 #*MAKE SURE ORDERED SO THAT llin ARE NEXT TO PPBO nets
 pbo_dat$Location = pbo_dat$Location
@@ -61,7 +137,7 @@ pbo_dat$pbo_mosq_survival = 1 - pbo_dat$pbo_24hr_dead
 pbo_dat$pbo_exiting   = (pbo_dat$N_exited/pbo_dat$N_mosq) * (1 - pbo_dat$pbo_24hr_dead)
 pbo_dat$pbo_successful = 1 - pbo_dat$pbo_24hr_dead - pbo_dat$pbo_exiting
 
-pbo_dat$x = pbo_dat$bioassay_mort_PERMETHRIN
+pbo_dat$x = pbo_dat$Bioassay_mort_PERMETHRIN
 pbo_dat$survival = 100 - pbo_dat$bioassay_mort_PERMETHRIN
 pbo_dat$x2 = pbo_dat$bioassay_mort_DELTAMETHRIN
 pbo_dat$survival2 = 100 - pbo_dat$bioassay_mort_DELTAMETHRIN
@@ -94,6 +170,7 @@ stan_base <- stan(file="R code/stan models/binomial_fit_nets.stan",
                   iter=2000, chains=4)
 base <- rstan::extract(stan_base)
 
+# saveRDS(stan_base,"ento_pbo_benefit.rds")
 # traceplot(stan_base)
 # stan_diag(stan_base,
 #           information = c("sample","stepsize", "treedepth","divergence"),
@@ -134,7 +211,8 @@ lines(median_pbo_pred ~ x,col="black",lwd=2)
 
 ##LOGISTIC BENEFIT - PermaNets & Olysets
 # pbo_dat = read.csv("E:/ARCHIVE/Rebecca_Expt hut analysis/PPBO_Studies_v2.csv")
-pbo_dat = read.csv("Q:/RProjects/Mosquito-Net-Parameters/pbos.csv")
+pbo_dat = read.csv("raw data/pbos.csv")
+# pbo_dat = read.csv("Q:/RProjects/Mosquito-Net-Parameters/pbos.csv")
 dim(pbo_dat)
 
 ##Relationship 2 PBO benefit on top of Normal LN 
@@ -176,14 +254,15 @@ prop_killed_pbop = data_list_PBO$d_t/data_list_PBO$n_t
 
 points(prop_killed_pbop ~ data_list_PBO$x,cex=1.2,pch=8,col="black")
 polygon(c(x,rev(x)),c(upper_pbo_predp,rev(lower_pbo_predp)),col=adegenet::transp("aquamarine3",0.4),border=NA)
-lines(median_pbo_predp ~ x,col="blue",lwd=2,lty=2)
+lines(median_pbo_predp ~ x,col="darkgreen",lwd=2,lty=2)
 
 
 
 
 ##LOGISTIC BENEFIT - PermaNets & Olysets
 # pbo_dat = read.csv("E:/ARCHIVE/Rebecca_Expt hut analysis/PPBO_Studies_v2.csv")
-pbo_dat = read.csv("Q:/RProjects/Mosquito-Net-Parameters/pbos.csv")
+# pbo_dat = read.csv("Q:/RProjects/Mosquito-Net-Parameters/pbos.csv")
+pbo_dat = read.csv("raw data/pbos.csv")
 dim(pbo_dat)
 
 
@@ -231,12 +310,12 @@ lines(median_pbo_predpr ~ x,col="red",lwd=2,lty=2)
 legend("bottomright",legend=c("Any pyrethroid-PBO ITNs",
                               "RCT pyrethroid-PBO ITNs",
                               "PermaNet 3.0"),
-       pch=c(19,8,17),col=c("black","blue","red"),lty=c(1,2,3),bty="n")
+       pch=c(19,8,17),col=c("grey","blue","red"),lty=c(1,2,3),bty="n")
 
 
 ################################
 ##
-## Part 2: Probable outcomes of feeding attempts in huts
+## Part 3: Probable outcomes of feeding attempts in huts
 ##
 #################################
 
@@ -246,8 +325,8 @@ legend("bottomright",legend=c("Any pyrethroid-PBO ITNs",
 ## to work out the impacts from Interceptor G2, Pyrethroid only, or Pyr-PBO
 
 ## ** Still need info from Ben Amoah for the G2
-df <- read.csv("data/3AC_data_with_72_final_And_new_G2.csv") # mac
-
+# df <- read.csv("data/3AC_data_with_72_final_And_new_G2.csv") # mac
+df <- read.csv("raw data/All Hut Studies April 2022 public.csv")
 # Remove Ifakara and those without totals or number dead
 library(dplyr)
 df2 <- df %>%
@@ -402,22 +481,22 @@ setup_inputs_pyr = function(df2){
 
 
 # Compile model
-full_model<- stan_model("R code/stan models/Deter_model_NoRE_DETER_opt1.stan") # flex params
-
-run1_f = function(df2,dataset){
-  data_stan = setup_inputs_ALL(df2)
-  
-  # Run model
-  fit_full <- sampling(full_model, data=data_stan, iter=2000, chains=4)
-  # params_a = extract(fit_full)
-  
-  # save fit
-  saveRDS(fit_full, paste0("data/LLINEUP_ento_deterrence_",dataset,".rds"))
-}
-
-run1_f(dfpyr,"pyr")
-run1_f(dfpbo,"pbo")
-
+# full_model<- stan_model("R code/stan models/Deter_model_NoRE_DETER_opt1.stan") # flex params
+# 
+# run1_f = function(df2,dataset){
+#   data_stan = setup_inputs_ALL(df2)
+#   
+#   # Run model
+#   fit_full <- sampling(full_model, data=data_stan, iter=2000, chains=4)
+#   # params_a = extract(fit_full)
+#   
+#   # save fit
+#   saveRDS(fit_full, paste0("stan model outputs/LLINEUP_ento_deterrence_",dataset,".rds"))
+# }
+# 
+# run1_f(dfpyr,"pyr")
+# run1_f(dfpbo,"pbo")
+# 
 
 fit1_b <- readRDS("stan model outputs/LLINEUP_ento_deterrence_pyr.rds")
 fit1_c <- readRDS("stan model outputs/LLINEUP_ento_deterrence_pbo.rds")
@@ -499,8 +578,10 @@ plot(mod_data_b[[2]][,1] ~ theta_sim,type = "l",
      col="grey45",
      main="",
      ylab="Probability of being deterred",
-     xlab="Probability of hut survival")
-axis(2,las=2,at=seq(0,1,0.20),labels=seq(0,1,0.2))
+     xlab="Probability of hut survival",
+     cex.lab=1.2,cex.axis=1.2)
+axis(2,las=2,at=seq(0,1,0.20),labels=seq(0,1,0.2),
+     cex.lab=1.2,cex.axis=1.2)
 ##    a. All data (all nets as per Nash et al)
 polygon(c(theta_sim,rev(theta_sim)),c(mod_data_b[[2]][,2],rev(mod_data_b[[2]][,3])),border = NA,col=adegenet::transp("grey75",0.4))
 polygon(c(theta_sim,rev(theta_sim)),c(mod_data_c[[2]][,2],rev(mod_data_c[[2]][,3])),border = NA,col=adegenet::transp("darkred",0.4))
@@ -525,29 +606,29 @@ P_control_c <- extract_control("P_control", fit1_c)
 
 
 
-plot(mod_data_b[[3]][,1] ~ theta_sim,type = "l",
-     ylim=c(0,1),xlim=c(0,1),yaxt="n",
-     col="grey55",
-     ylab="Probability of being caught in control hut",
-     xlab="Probability of hut survival")
-axis(2,las=2,at=seq(0,1,0.20),labels=seq(0,1,0.2))
-##    a. All data (all nets as per Nash et al)
-polygon(c(theta_sim,rev(theta_sim)),c(mod_data_b[[3]][,2],rev(mod_data_b[[3]][,3])),border = NA,col=adegenet::transp("grey75",0.4))
-lines(mod_data_b[[3]][,2] ~ theta_sim,lty=2,col="grey75")
-lines(mod_data_b[[3]][,3] ~ theta_sim,lty=2,col="grey75")
-abline(h=P_control_b,lwd=2,col="grey75")
-
-##    b. Pyr
-lines(mod_data_b[[3]][,1] ~ theta_sim,lty=1,col="black")
-lines(mod_data_b[[3]][,2] ~ theta_sim,lty=2,col="black")
-lines(mod_data_b[[3]][,3] ~ theta_sim,lty=2,col="black")
-abline(h=P_control_b,lwd=2,col="black")
-
-##    b. Pyr-PBO
-lines(mod_data_c[[3]][,1] ~ theta_sim,lty=1,col="purple")
-lines(mod_data_c[[3]][,2] ~ theta_sim,lty=2,col="purple")
-lines(mod_data_c[[3]][,3] ~ theta_sim,lty=2,col="purple")
-abline(h=P_control_c,lwd=2,col="purple")
+# plot(mod_data_b[[3]][,1] ~ theta_sim,type = "l",
+#      ylim=c(0,1),xlim=c(0,1),yaxt="n",
+#      col="grey55",
+#      ylab="Probability of being caught in control hut",
+#      xlab="Probability of hut survival")
+# axis(2,las=2,at=seq(0,1,0.20),labels=seq(0,1,0.2))
+# ##    a. All data (all nets as per Nash et al)
+# polygon(c(theta_sim,rev(theta_sim)),c(mod_data_b[[3]][,2],rev(mod_data_b[[3]][,3])),border = NA,col=adegenet::transp("grey75",0.4))
+# lines(mod_data_b[[3]][,2] ~ theta_sim,lty=2,col="grey75")
+# lines(mod_data_b[[3]][,3] ~ theta_sim,lty=2,col="grey75")
+# abline(h=P_control_b,lwd=2,col="grey75")
+# 
+# ##    b. Pyr
+# lines(mod_data_b[[3]][,1] ~ theta_sim,lty=1,col="black")
+# lines(mod_data_b[[3]][,2] ~ theta_sim,lty=2,col="black")
+# lines(mod_data_b[[3]][,3] ~ theta_sim,lty=2,col="black")
+# abline(h=P_control_b,lwd=2,col="black")
+# 
+# ##    b. Pyr-PBO
+# lines(mod_data_c[[3]][,1] ~ theta_sim,lty=1,col="purple")
+# lines(mod_data_c[[3]][,2] ~ theta_sim,lty=2,col="purple")
+# lines(mod_data_c[[3]][,3] ~ theta_sim,lty=2,col="purple")
+# abline(h=P_control_c,lwd=2,col="purple")
 
 ########################
 ##
@@ -587,25 +668,25 @@ setup_inputs_fed = function(df2){
   return(data_stan)
 }
 
-full_model<- stan_model("E:/Mosquito net parameters/R code/stan models/Model_succfed_WithREs.stan")
+# full_model<- stan_model("R code/stan models/Model_succfed_WithREs.stan")
+# 
+# run_f2 = function(df2,dataset){
+#   data_stan = setup_inputs_fed(df2)
+#   
+#   # Fit model
+#   fit_hut_ALL <- sampling(full_model, data=data_stan, iter=2000, chains=4)
+#   
+#   # save fit
+#   saveRDS(fit_hut_ALL, paste0("stan model outputs/LLINEUP_ento_feeding_0washes_",dataset,".rds"))
+# }
+# 
+# dfpyr = dfpyr[!is.na(dfpyr$N_fed),]
+# dfpbo = dfpbo[!is.na(dfpbo$N_fed),]
+# run_f2(dfpyr,"pyr")
+# run_f2(dfpbo,"pbo")
 
-run_f2 = function(df2,dataset){
-  data_stan = setup_inputs_fed(df2)
-  
-  # Fit model
-  fit_hut_ALL <- sampling(full_model, data=data_stan, iter=2000, chains=4)
-  
-  # save fit
-  saveRDS(fit_hut_ALL, paste0("data/LLINEUP_ento_feeding_0washes_",dataset,".rds"))
-}
-
-dfpyr = dfpyr[!is.na(dfpyr$N_fed),]
-dfpbo = dfpbo[!is.na(dfpbo$N_fed),]
-run_f2(dfpyr,"pyr")
-run_f2(dfpbo,"pbo")
-
-fit3_b <- readRDS("stan model outputs/ento_feeding_0washes_pyr.rds")
-fit3_c <- readRDS("stan model outputs/ento_feeding_0washes_pbo.rds")
+fit3_b <- readRDS("stan model outputs/LLINEUP_ento_feeding_0washes_pyr.rds")
+fit3_c <- readRDS("stan model outputs/LLINEUP_ento_feeding_0washes_pbo.rds")
 print(fit3_b, pars=c("a","b")) 
 print(fit3_c, pars=c("a","b")) 
 
@@ -671,8 +752,10 @@ plot(fed.datab$pc_surv_fed ~ fed.datab$pc_surv, cex=fed.datab$pt_cex,
      pch=19,
      ylab = "Successfully blood fed (%)",
      xlab = "Mosquito survival in EHT (%)",
-     yaxt="n",ylim=c(0,100))
-axis(2,las=2,at=c(0,20,40,60,80,100))
+     yaxt="n",ylim=c(0,100),
+     cex.lab=1.2,cex.axis=1.2)
+axis(2,las=2,at=c(0,20,40,60,80,100),
+     cex.lab=1.2,cex.axis=1.2)
 
 points(fed.datab$pc_surv_fed ~ fed.datab$pc_surv,
        cex=fed.datab$pt_cex,
@@ -683,7 +766,7 @@ points(fed.datac$pc_surv_fed ~ fed.datac$pc_surv,
        col=adegenet::transp("purple",0.4),
        pch=19,ylim=c(0,100))
 
-lines(cred_int_data_b$P_succfed ~ cred_int_data_a$my_surv, col = "black",lwd=2)
+lines(cred_int_data_b$P_succfed ~ cred_int_data_b$my_surv, col = "black",lwd=2)
 polygon(c(cred_int_data_b$my_surv,rev(cred_int_data_b$my_surv)),
         c(cred_int_data_b$P_fed_upper,rev(cred_int_data_b$P_fed_lower)),
         border=NA,col=adegenet::transp("grey55",0.4))
