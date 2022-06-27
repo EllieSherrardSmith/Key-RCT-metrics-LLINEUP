@@ -820,6 +820,30 @@ for(i in 1:length(rand)){
   write.csv(SET1all,paste0("C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/raw data/specific-net-params_",i,".csv"))  
 }
 
+store_dn1 = store_rn1 = store_hl1 = array(dim=c(104,20))
+store_dn2 = store_rn2 = store_hl2 = array(dim=c(104,20))
+for(i in 1:20){
+  dataspec = read.csv(paste0("C:/Users/esherrar/Documents/Rprojects/Key-RCT-metrics-LLINEUP/raw data/specific-net-params_",i,".csv"),header=TRUE)
+  dataspec = dataspec[order(dataspec$cluster), ]
+  store_dn1[,i] = dataspec[,6]
+  store_rn1[,i] = dataspec[,7]
+  store_hl1[,i] = dataspec[,8]
+  store_dn2[,i] = dataspec[,9]
+  store_rn2[,i] = dataspec[,10]
+  store_hl2[,i] = dataspec[,11]
+  
+}
+spec_mean_params = data.frame(cluster = dataspec$cluster, 
+                              dn1 = rowMeans(store_dn1),
+                              rn1 = rowMeans(store_rn1),
+                              hl1 = rowMeans(store_hl1),
+                              dn2 = rowMeans(store_dn2),
+                              rn2 = rowMeans(store_rn2),
+                              hl2 = rowMeans(store_hl2))
+write.csv(spec_mean_params,"raw data/specific-net-paramsMEANS.csv")
+
+
+
 
 # test = resistance_ITN_default_params_2_f(product = 1, ## PYRETHROID ONLY LLIN 
 #                                          # res = seq(0,1,length=101), ## SURVIVAL IN SUSC BIOASSAY
