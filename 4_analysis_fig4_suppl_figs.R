@@ -580,6 +580,28 @@ ad_3 = prev_obs - prev_mod3
 ad_4 = prev_obs - prev_mod4
 ad_5 = prev_obs - prev_mod5
 
+range(ad_0,na.rm=T)
+range(ad_1,na.rm=T)
+range(ad_1_1,na.rm=T)
+range(ad_1_2,na.rm=T)
+range(ad_1_3,na.rm=T)
+range(ad_1_4,na.rm=T)
+range(ad_2,na.rm=T)
+range(ad_3,na.rm=T)
+range(ad_4,na.rm=T)
+range(ad_5,na.rm=T)
+
+quantile(ad_0,c(0.25,0.75),na.rm=T)
+quantile(ad_1,c(0.25,0.75),na.rm=T)
+quantile(ad_1_1,c(0.25,0.75),na.rm=T)
+quantile(ad_1_2,c(0.25,0.75),na.rm=T)
+quantile(ad_1_3,c(0.25,0.75),na.rm=T)
+quantile(ad_1_4,c(0.25,0.75),na.rm=T)
+quantile(ad_2,c(0.25,0.75),na.rm=T)
+quantile(ad_3,c(0.25,0.75),na.rm=T)
+quantile(ad_4,c(0.25,0.75),na.rm=T)
+quantile(ad_5,c(0.25,0.75),na.rm=T)
+
 ad_0_means = prev_obs_means - prev_mod_means0
 ad_1_means = prev_obs_means - prev_mod_means1
 ad_1_1_means = prev_obs_means - prev_mod_means1_1
@@ -776,6 +798,69 @@ DF = data.frame(cluster = clusters,
                 prev_mod4 = prev_mod4,
                 prev_mod5 = prev_mod5)
 
+## Compare specific questions
+## When predicting impact using parameters specifying pyr-only nets
+## is there a difference in the estimate for PBOs?
+  
+DF$net_type = c(rep("Oly",52),rep("OlyPlus",76),rep("Per2",160),rep("Per3",128))
+DF$logic_net = c(rep(0,52),rep(1,76),rep(0,160),rep(1,128))
+DF$pos = round(1000*DF$prev_obs,0)
+DF$neg = 1000 - DF$pos  
+
+DF$ad_0 = prev_obs - prev_mod0
+DF$ad_1 = prev_obs - prev_mod1
+DF$ad_1_1 = prev_obs - prev_mod1_1
+DF$ad_1_2 = prev_obs - prev_mod1_2
+DF$ad_1_3 = prev_obs - prev_mod1_3
+DF$ad_1_4 = prev_obs - prev_mod1_4
+DF$ad_2 = prev_obs - prev_mod2
+DF$ad_3 = prev_obs - prev_mod3
+DF$ad_4 = prev_obs - prev_mod4
+DF$ad_5 = prev_obs - prev_mod5
+
+DF = DF[!(DF$cluster==78 | DF$cluster==27),]  
+
+tapply(DF$ad_0,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_1,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_1_1,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_1_2,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_1_3,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_1_4,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_2,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_3,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_4,DF$months,median,na.rm=TRUE)
+tapply(DF$ad_5,DF$months,median,na.rm=TRUE)
+
+q_fun = function(dt){
+  a = quantile(dt[DF$months == 6],c(0.025,0.975),na.rm=TRUE)
+  b = quantile(dt[DF$months == 12],c(0.025,0.975),na.rm=TRUE)
+  d = quantile(dt[DF$months == 18],c(0.025,0.975),na.rm=TRUE)
+  f = quantile(dt[DF$months == 25],c(0.025,0.975),na.rm=TRUE)
+  return(list(a,b,d,f))
+}
+q_fun(DF$ad_0)
+q_fun(DF$ad_1)
+q_fun(DF$ad_1_1)
+q_fun(DF$ad_1_2)
+q_fun(DF$ad_1_3)
+q_fun(DF$ad_1_4)
+q_fun(DF$ad_2)
+q_fun(DF$ad_3)
+q_fun(DF$ad_4)
+q_fun(DF$ad_5)
+
+quantile(DF$ad_0,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_1,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_1_1,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_1_2,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_1_3,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_1_4,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_2,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_3,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_4,c(0.5,0.025,0.975),na.rm=T)
+quantile(DF$ad_5,c(0.5,0.025,0.975),na.rm=T)
+
+
 simp0 = rstanarm::stan_glm(prev_obs ~ prev_mod0 + months,data=DF)
 simp1 = rstanarm::stan_glm(prev_obs ~ prev_mod1 + months,data=DF)
 simp11 = rstanarm::stan_glm(prev_obs ~ prev_mod1_1 + months,data=DF)
@@ -881,7 +966,7 @@ simp = rstanarm::stan_glm(prev_empirical ~ prev_simulated + as.factor(simulation
 sims = as.matrix(simp)
 quantile(sims[,2],c(0.025,0.5,0.975))
 quantile(sims[,3],c(0.025,0.5,0.975))
-summary(simp)
+print(simp)
 
 m1 = glm(prev_empirical ~ prev_simulated + as.factor(simulationflag),data=dt)
 summary(m1)
@@ -889,16 +974,16 @@ summary.lm(m1)
 
 ## Linear Regressions - which model predicts trial data best?
 
-summary.lm(lm(prev_obs ~ prev_mod0 + 0))
-summary.lm(lm(prev_obs ~ prev_mod1 + 0))
-summary.lm(lm(prev_obs ~ prev_mod1_1 + 0))
-summary.lm(lm(prev_obs ~ prev_mod1_2 + 0))
-summary.lm(lm(prev_obs ~ prev_mod1_3 + 0))
-summary.lm(lm(prev_obs ~ prev_mod1_4 + 0))
-summary.lm(lm(prev_obs ~ prev_mod2 + 0))
-summary.lm(lm(prev_obs ~ prev_mod3 + 0))
-summary.lm(lm(prev_obs ~ prev_mod4 + 0)) 
-summary.lm(lm(prev_obs ~ prev_mod5 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod0 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod1 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod1_1 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod1_2 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod1_3 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod1_4 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod2 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod3 + 0))
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod4 + 0)) 
+summary.lm(lm(DF$prev_obs ~ DF$prev_mod5 + 0))
 
 #######################################################
 ##
@@ -908,14 +993,6 @@ summary.lm(lm(prev_obs ~ prev_mod5 + 0))
 ##
 #######################################################
 
-## Compare specific questions
-## When predicting impact using parameters specifying pyr-only nets
-## is there a difference in the estimate for PBOs?
-
-DF$net_type = c(rep("Oly",52),rep("OlyPlus",76),rep("Per2",160),rep("Per3",128))
-DF$logic_net = c(rep(0,52),rep(1,76),rep(0,160),rep(1,128))
-DF$pos = round(1000*DF$prev_obs,0)
-DF$neg = 1000 - DF$pos  
 
 
 mod0 = rstanarm::stan_glm(cbind(pos,neg) ~ prev_mod0 + logic_net,
@@ -987,6 +1064,7 @@ sim_comparison_func = function(prev_modelled,vec_plot,print_sim){
   
   print(mod1)
   
+  
   plot(DF$prev_obs ~ vec_plot,ylim=c(0,1),xlim=c(0,1),
        col = ifelse(DF$logic_net == 0, "grey","purple"),
        pch=19,
@@ -1017,11 +1095,12 @@ sim_comparison_func = function(prev_modelled,vec_plot,print_sim){
           at=c(0.88,0.94),boxwex=.05,
           yaxt="n",xaxt="n",
           col=adegenet::transp(c("grey","purple"),0.4),add=TRUE)
-  
+  return(summary(mod1))
 }
 
 
-sim_comparison_func(prev_mod0,vec_plot=DF$prev_mod0, print_sim = "Sim 0")
+sim_comparison_func(prev_modelled = DF$prev_mod0,
+                    vec_plot=DF$prev_mod0, print_sim = "Sim 0")
 
 boxplot(DF$prev_obs[DF$net_type == "Oly"],
         DF$prev_obs[DF$net_type == "Per2"],
@@ -1031,12 +1110,51 @@ boxplot(DF$prev_obs[DF$net_type == "Oly"],
         yaxt="n",xaxt="n",
         col=adegenet::transp(c("red","blue","orange","darkgreen"),0.4),add=TRUE)
 
-sim_comparison_func(prev_mod1,vec_plot=DF$prev_mod1, print_sim = "Sim 1")
-sim_comparison_func(prev_mod1_1,vec_plot=DF$prev_mod1_1, print_sim = "Sim 1-1")
-sim_comparison_func(prev_mod1_2,vec_plot=DF$prev_mod1_2, print_sim = "Sim 1-2")
-sim_comparison_func(prev_mod1_3,vec_plot=DF$prev_mod1_3, print_sim = "Sim 1-3")
-sim_comparison_func(prev_mod1_4,vec_plot=DF$prev_mod1_4, print_sim = "Sim 1-4")
-sim_comparison_func(prev_mod2,vec_plot=DF$prev_mod2, print_sim = "Sim 2")
-sim_comparison_func(prev_mod3,vec_plot=DF$prev_mod3, print_sim = "Sim 3")
-sim_comparison_func(prev_mod4,vec_plot=DF$prev_mod4, print_sim = "Sim 4")
-sim_comparison_func(prev_mod5,vec_plot=DF$prev_mod5, print_sim = "Sim 5")
+sim_comparison_func(DF$prev_mod1,vec_plot=DF$prev_mod1, print_sim = "Sim 1")
+sim_comparison_func(DF$prev_mod1_1,vec_plot=DF$prev_mod1_1, print_sim = "Sim 1-1")
+sim_comparison_func(DF$prev_mod1_2,vec_plot=DF$prev_mod1_2, print_sim = "Sim 1-2")
+sim_comparison_func(DF$prev_mod1_3,vec_plot=DF$prev_mod1_3, print_sim = "Sim 1-3")
+sim_comparison_func(DF$prev_mod1_4,vec_plot=DF$prev_mod1_4, print_sim = "Sim 1-4")
+sim_comparison_func(DF$prev_mod2,vec_plot=DF$prev_mod2, print_sim = "Sim 2")
+sim_comparison_func(DF$prev_mod3,vec_plot=DF$prev_mod3, print_sim = "Sim 3")
+sim_comparison_func(DF$prev_mod4,vec_plot=DF$prev_mod4, print_sim = "Sim 4")
+sim_comparison_func(DF$prev_mod5,vec_plot=DF$prev_mod5, print_sim = "Sim 5")
+
+
+##########################################
+##
+## lm plots
+##
+##########################################
+
+lm_plot_fn = function(prevsim,sc,mn_sc_sim){
+  plot(DF$prev_obs ~ prevsim, ylim=c(0,0.8),xlim=c(0,0.8),
+       main = sc,
+       ylab="Trial reported prevalence (%)",yaxt="n",
+       xlab = "Model simulated prevalence (%)",xaxt="n",
+       col=adegenet::transp(rep(cols,each=4),0.1),pch=19)
+  axis(1, at = seq(0,1,0.2), labels = seq(0,100,20))
+  axis(2, las = 2, at = seq(0,1,0.2), labels = seq(0,100,20))
+  abline(a=0,b=1,lty=2)
+  
+  points(prev_obs_means ~ mn_sc_sim,col=cols,pch=19,cex=1.2)
+}
+
+lm_plot_fn(prevsim = DF$prev_mod0, sc = "Scenario 0", mn_sc_sim = prev_mod_means0)
+boxplot(DF$prev_obs[DF$net_type == "Oly"],
+        DF$prev_obs[DF$net_type == "Per2"],
+        DF$prev_obs[DF$net_type == "OlyPlus"],
+        DF$prev_obs[DF$net_type == "Per3"],
+        at=c(0.68,0.72,0.76,0.8),boxwex=.025,
+        yaxt="n",xaxt="n",
+        col=adegenet::transp(c("red","blue","orange","darkgreen"),0.4),add=TRUE)
+
+lm_plot_fn(prevsim = DF$prev_mod1, sc = "Scenario 1", mn_sc_sim = prev_mod_means1)
+lm_plot_fn(prevsim = DF$prev_mod1_1, sc = "Scenario 1-1", mn_sc_sim = prev_mod_means1_1)
+lm_plot_fn(prevsim = DF$prev_mod1_2, sc = "Scenario 1-2", mn_sc_sim = prev_mod_means1_2)
+lm_plot_fn(prevsim = DF$prev_mod1_3, sc = "Scenario 1-3", mn_sc_sim = prev_mod_means1_3)
+lm_plot_fn(prevsim = DF$prev_mod1_4, sc = "Scenario 1-4", mn_sc_sim = prev_mod_means1_4)
+lm_plot_fn(prevsim = DF$prev_mod2, sc = "Scenario 2", mn_sc_sim = prev_mod_means2)
+lm_plot_fn(prevsim = DF$prev_mod3, sc = "Scenario 3", mn_sc_sim = prev_mod_means3)
+lm_plot_fn(prevsim = DF$prev_mod4, sc = "Scenario 4", mn_sc_sim = prev_mod_means4)
+lm_plot_fn(prevsim = DF$prev_mod5, sc = "Scenario 5", mn_sc_sim = prev_mod_means5)
