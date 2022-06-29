@@ -162,7 +162,7 @@ cali_clusters_f = function(dat_row){
 }
 
 eir_est = numeric(nrow(test_data))
-for(i in 99:nrow(test_data)){
+for(i in 1:nrow(test_data)){
   eir_est[i] = cali_clusters_f(i)
   print(i)
 }
@@ -342,7 +342,12 @@ target <- c(test_data$Prevalence_baseline_2_10_yrs)
 target_tt <- c(6*365+test_data$days_after_jan_2017-30)
 points(target ~ target_tt,col = cols2)
 
-
+match_est = numeric(104)
+for(i in 1:104){
+  match_est[i] = as.numeric(scenario_5[target_tt[i],i+1])
+}
+plot(match_est ~ target)
+abline(a=0,b=1)
 
 ##
 ## Need to check out 

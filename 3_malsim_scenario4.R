@@ -533,7 +533,7 @@ prev_mod = c(prev_mod_ol[1,],prev_mod_ol[2,],prev_mod_ol[3,],prev_mod_ol[4,],
              prev_mod_Pe3[1,],prev_mod_Pe3[2,],prev_mod_Pe3[3,],prev_mod_Pe3[4,])
 
 plot(prev_obs ~ prev_mod, ylim=c(0,0.8),xlim=c(0,0.8),
-     main = "Scenario 1-3: Deployment month",
+     main = "Scenario 4: Deployment month",
      ylab="Trial reported prevalence (%)",yaxt="n",
      xlab = "Model simulated prevalence (%)",xaxt="n",
      col=adegenet::transp(rep(cols,each=4),0.1),pch=19)
